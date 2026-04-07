@@ -1,12 +1,6 @@
 <template>
   <div class="layout">
-    <nav class="sidebar">
-      <div class="logo">⊞ My wallet</div>
-      <RouterLink to="/">Dashboard</RouterLink>
-      <RouterLink to="/transactions">Transactions</RouterLink>
-      <RouterLink to="/add">Add new</RouterLink>
-      <RouterLink to="/settings">Settings</RouterLink>
-    </nav>
+    <SideBar />
     <main class="content">
       <RouterView />
     </main>
@@ -14,5 +8,6 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
+import SideBar from './components/SideBar.vue';
 </script>

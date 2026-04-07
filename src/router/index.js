@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/views/HomeView.vue';
-import TransactionView from '@/views/TransactionView.vue';
-import FormView from '@/views/FormView.vue';
-import SettingsView from '@/views/SettingsView.vue';
+import HomeView from '@/Views/HomeView.vue';
+import TransactionView from '@/Views/TransactionView.vue';
+import FormView from '@/Views/FormView.vue';
+import SettingsView from '@/Views/SettingsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

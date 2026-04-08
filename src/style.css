@@ -1,0 +1,69 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0f1117;
+  --sidebar-bg: #161820;
+  --card-bg: #1a1d27;
+  --border: #252836;
+  --text: #c8cdd8;
+  --text-muted: #6b7280;
+  --text-bright: #f1f5f9;
+  --accent: #3b82f6;
+  --accent-bg: rgba(59, 130, 246, 0.12);
+  --income: #3b82f6;
+  --expense: #ef4444;
+  --balance: #22c55e;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

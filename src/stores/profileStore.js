@@ -13,8 +13,12 @@ export const useProfileStore = defineStore('profile', () => {
   const periodicExpenses = ref([]);
 
   const fetchProfile = async () => {
-    const res = await getProfile();
-    profile.value = res.data;
+    try {
+      const res = await getProfile();
+      profile.value = res.data;
+    } catch {
+      // API unavailable, keep default empty profile
+    }
   };
 
   const saveProfile = async (data) => {

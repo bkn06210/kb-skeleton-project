@@ -1,0 +1,88 @@
+{
+  "budget": [
+    {
+      "id": "0001",
+      "date": "2026-04-07",
+      "type": "expense",
+      "category": "식비",
+      "detailCategory": "점심",
+      "amount": 8500,
+      "memo": "학식 비빔밥"
+    },
+    {
+      "id": "0002",
+      "date": "2026-04-01",
+      "type": "income",
+      "category": "용돈",
+      "detailCategory": "",
+      "amount": 300000,
+      "memo": "부모님 용돈"
+    },
+    {
+      "id": "0003",
+      "date": "2026-04-01",
+      "type": "expense",
+      "category": "교통비",
+      "detailCategory": "버스",
+      "amount": 50000,
+      "memo": "버스카드 충전"
+    },
+    {
+      "id": "0004",
+      "date": "2026-04-01",
+      "type": "expense",
+      "category": "공과금",
+      "detailCategory": "통신비",
+      "amount": 50000,
+      "memo": "월 통신비"
+    },
+    {
+      "id": "0005",
+      "date": "2026-03-25",
+      "type": "income",
+      "category": "월급",
+      "detailCategory": "알바",
+      "amount": 1550000,
+      "memo": "알바비"
+    }
+  ],
+  "incomeCategory": [
+    { "id": "1", "name": "월급" },
+    { "id": "2", "name": "용돈" },
+    { "id": "3", "name": "이자" },
+    { "id": "4", "name": "부수입" }
+  ],
+  "expenseCategory": [
+    { "id": "1", "name": "식비" },
+    { "id": "2", "name": "교통비" },
+    { "id": "3", "name": "유흥" },
+    { "id": "4", "name": "공과금" },
+    { "id": "5", "name": "쇼핑" },
+    { "id": "6", "name": "의료" },
+    { "id": "7", "name": "기타" }
+  ],
+  "periodicExpense": [
+    {
+      "id": "0001",
+      "category": "공과금",
+      "detailCategory": "통신비",
+      "amount": 50000,
+      "memo": "월 통신비",
+      "cycle": "monthly",
+      "day": 1
+    },
+    {
+      "id": "0002",
+      "category": "유흥",
+      "detailCategory": "넷플릭스",
+      "amount": 17000,
+      "memo": "넷플릭스 구독",
+      "cycle": "monthly",
+      "day": 15
+    }
+  ],
+  "profile": {
+    "name": "홍길동",
+    "email": "hong@example.com"
+  }
+}

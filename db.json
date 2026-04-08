@@ -47,19 +47,52 @@
     }
   ],
   "incomeCategory": [
-    { "id": "1", "name": "월급" },
-    { "id": "2", "name": "용돈" },
-    { "id": "3", "name": "이자" },
-    { "id": "4", "name": "부수입" }
+    {
+      "id": "1",
+      "name": "월급"
+    },
+    {
+      "id": "2",
+      "name": "용돈"
+    },
+    {
+      "id": "3",
+      "name": "이자"
+    },
+    {
+      "id": "4",
+      "name": "부수입"
+    }
   ],
   "expenseCategory": [
-    { "id": "1", "name": "식비" },
-    { "id": "2", "name": "교통비" },
-    { "id": "3", "name": "유흥" },
-    { "id": "4", "name": "공과금" },
-    { "id": "5", "name": "쇼핑" },
-    { "id": "6", "name": "의료" },
-    { "id": "7", "name": "기타" }
+    {
+      "id": "1",
+      "name": "식비"
+    },
+    {
+      "id": "2",
+      "name": "교통비"
+    },
+    {
+      "id": "3",
+      "name": "유흥"
+    },
+    {
+      "id": "4",
+      "name": "공과금"
+    },
+    {
+      "id": "5",
+      "name": "쇼핑"
+    },
+    {
+      "id": "6",
+      "name": "의료"
+    },
+    {
+      "id": "7",
+      "name": "기타"
+    }
   ],
   "periodicExpense": [
     {
@@ -84,5 +117,6 @@
   "profile": {
     "name": "홍길동",
     "email": "hong@example.com"
-  }
+  },
+  "$schema": "./node_modules/json-server/schema.json"
 }

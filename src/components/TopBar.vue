@@ -39,6 +39,7 @@ const titleMap = {
   transactions: 'Transactions',
   add: 'Add transaction',
   settings: 'Settings',
+  profile: 'Profile',
 };
 
 const pageTitle = computed(() => titleMap[route.name] ?? 'My wallet');

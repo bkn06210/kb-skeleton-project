@@ -126,9 +126,8 @@ const COLORS = [
 
 const budgetStore = useBudgetStore();
 const monthStore = useMonthStore();
-const { budgetList } = storeToRefs(budgetStore);
-
-const load = () => budgetStore.fetchAll({ date_like: monthStore.yyyyMM });
+const { transactions: budgetList } = storeToRefs(budgetStore);
+const load = () => budgetStore.fetchTransactions();
 
 onMounted(load);
 watch(() => monthStore.yyyyMM, load);

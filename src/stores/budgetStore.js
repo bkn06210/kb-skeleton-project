@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import {
   getBudget,
   getBudgetById,
@@ -7,8 +7,10 @@ import {
   updateBudget,
   deleteBudget,
 } from '../api/budget';
+import { useMonthStore } from './monthStore';
 
 export const useBudgetStore = defineStore('budget', () => {
+  const monthStore = useMonthStore();
   const transactions = ref([]);
   const selectedPeriod = ref('month');
   const selectedType = ref('all');
@@ -24,7 +26,7 @@ export const useBudgetStore = defineStore('budget', () => {
         (a, b) => new Date(b.date) - new Date(a.date),
       );
     } catch (error) {
-      console.error('데이터 불러오기 실패:', error);
+      console.error('Failed to fetch transactions:', error);
     }
   };
 
@@ -53,56 +55,95 @@ export const useBudgetStore = defineStore('budget', () => {
     }
   };
 
-  const availableCategories = computed(() => {
-    const typeFiltered =
-      selectedType.value === 'all'
-        ? transactions.value
-        : transactions.value.filter((t) => t.type === selectedType.value);
+  const matchesType = (item) => {
+    return selectedType.value === 'all' || item.type === selectedType.value;
+  };
 
-    const categories = typeFiltered.map((t) => t.category);
+  const matchesPeriod = (item) => {
+    if (selectedPeriod.value === 'all') {
+      return true;
+    }
+
+    const txDate = new Date(item.date);
+    if (Number.isNaN(txDate.getTime())) {
+      return false;
+    }
+
+    if (selectedPeriod.value === 'month') {
+      return (
+        txDate.getFullYear() === monthStore.year &&
+        txDate.getMonth() + 1 === monthStore.month
+      );
+    }
+
+    if (selectedPeriod.value === 'week') {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return txDate >= oneWeekAgo && txDate <= now;
+    }
+
+    if (selectedPeriod.value === 'custom') {
+      const start = customStartDate.value
+        ? new Date(customStartDate.value)
+        : null;
+      const end = customEndDate.value ? new Date(customEndDate.value) : null;
+
+      if (start && Number.isNaN(start.getTime())) {
+        return false;
+      }
+
+      if (end && Number.isNaN(end.getTime())) {
+        return false;
+      }
+
+      if (end) {
+        end.setHours(23, 59, 59, 999);
+      }
+
+      if (start && txDate < start) {
+        return false;
+      }
+
+      if (end && txDate > end) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const typeAndPeriodFiltered = computed(() => {
+    return transactions.value.filter(
+      (item) => matchesType(item) && matchesPeriod(item),
+    );
+  });
+
+  const availableCategories = computed(() => {
+    const categories = typeAndPeriodFiltered.value
+      .map((item) => item.category)
+      .filter(Boolean);
     return [...new Set(categories)];
   });
 
-  const filteredTransactions = computed(() => {
-    return transactions.value.filter((item) => {
-      // 1. 타입 필터
-      const matchType =
-        selectedType.value === 'all' || item.type === selectedType.value;
-
-    
-      const matchCategory =
-        selectedCategory.value === 'all' ||
-        item.category === selectedCategory.value;
-
-     
-      let matchPeriod = true;
-      if (selectedPeriod.value !== 'all') {
-        const txDate = new Date(item.date);
-        const now = new Date();
-
-        if (selectedPeriod.value === 'month') {
-          
-          matchPeriod =
-            txDate.getFullYear() === now.getFullYear() &&
-            txDate.getMonth() === now.getMonth();
-        } else if (selectedPeriod.value === 'week') {
-         
-          const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          matchPeriod = txDate >= oneWeekAgo && txDate <= now;
-        } else if (selectedPeriod.value === 'custom') {
-          
-          if (customStartDate.value && customEndDate.value) {
-            const start = new Date(customStartDate.value);
-            const end = new Date(customEndDate.value);
-            end.setHours(23, 59, 59, 999);
-            matchPeriod = txDate >= start && txDate <= end;
-          } else {
-            matchPeriod = true;
-          }
-        }
+  watch(
+    availableCategories,
+    (categories) => {
+      if (
+        selectedCategory.value !== 'all' &&
+        !categories.includes(selectedCategory.value)
+      ) {
+        selectedCategory.value = 'all';
       }
+    },
+    { immediate: true },
+  );
 
-      return matchType && matchCategory && matchPeriod;
+  const filteredTransactions = computed(() => {
+    return typeAndPeriodFiltered.value.filter((item) => {
+      return (
+        selectedCategory.value === 'all' ||
+        item.category === selectedCategory.value
+      );
     });
   });
 

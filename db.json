@@ -44,6 +44,33 @@
       "detailCategory": "알바",
       "amount": 1550000,
       "memo": "알바비"
+    },
+    {
+      "type": "expense",
+      "date": "2026-04-09",
+      "amount": 333,
+      "category": "유흥",
+      "detailCategory": "33",
+      "memo": "치킨조키",
+      "id": "pYekllTd_mU"
+    },
+    {
+      "type": "expense",
+      "date": "2026-04-09",
+      "amount": 444,
+      "category": "공과금",
+      "detailCategory": "",
+      "memo": "",
+      "id": "ydgpkLUL_p0"
+    },
+    {
+      "type": "income",
+      "date": "2026-04-09",
+      "amount": 2222,
+      "category": "부수입",
+      "detailCategory": "",
+      "memo": "222",
+      "id": "TPnnk-9ZyM4"
     }
   ],
   "incomeCategory": [

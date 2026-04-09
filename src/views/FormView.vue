@@ -84,7 +84,9 @@
 
       <!-- Buttons -->
       <div class="form-actions">
-        <button class="btn btn-save" @click="save">Save</button>
+        <button class="btn btn-save" @click="save">
+          {{ isEditMode ? 'Update' : 'Save' }}
+        </button>
         <button class="btn btn-cancel" @click="onCancel">Cancel</button>
       </div>
     </div>
@@ -92,20 +94,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useCategoryStore } from '../stores/categoryStore';
 import { useBudgetStore } from '../stores/budgetStore';
 import CategorySelect from '../components/CategorySelect.vue';
 
+const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore();
 const budgetStore = useBudgetStore();
 const { incomeCategories, expenseCategories } = storeToRefs(categoryStore);
 
+const getToday = () => new Date().toISOString().slice(0, 10);
+const editId = computed(() =>
+  typeof route.query.id === 'string' ? route.query.id : '',
+);
+const isEditMode = computed(() => editId.value.length > 0);
+
 const type = ref('expense');
-const date = ref(new Date().toISOString().slice(0, 10));
+const date = ref(getToday());
 const amount = ref(0);
 const amountDisplay = ref('');
 const category = ref('');
@@ -118,22 +127,72 @@ const onAmountInput = (e) => {
   amountDisplay.value = raw ? Number(raw).toLocaleString() : '';
 };
 
-onMounted(() => categoryStore.fetchCategories());
+const resetForm = () => {
+  type.value = 'expense';
+  date.value = getToday();
+  amount.value = 0;
+  amountDisplay.value = '';
+  category.value = '';
+  detailCategory.value = '';
+  memo.value = '';
+};
+
+const fillForm = (data) => {
+  type.value = data?.type ?? 'expense';
+  date.value = data?.date ?? getToday();
+  amount.value = Number(data?.amount) || 0;
+  amountDisplay.value = amount.value ? amount.value.toLocaleString() : '';
+  category.value = data?.category ?? '';
+  detailCategory.value = data?.detailCategory ?? '';
+  memo.value = data?.memo ?? '';
+};
+
+const loadTransaction = async () => {
+  if (!isEditMode.value) {
+    resetForm();
+    return;
+  }
+
+  try {
+    const data = await budgetStore.fetchById(editId.value);
+    fillForm(data);
+  } catch (error) {
+    console.error('Failed to load transaction:', error);
+    router.push('/transactions');
+  }
+};
+
+onMounted(async () => {
+  await categoryStore.fetchCategories();
+  await loadTransaction();
+});
+
+watch(editId, async (newId, oldId) => {
+  if (newId === oldId) return;
+  await loadTransaction();
+});
 
 const save = async () => {
   if (!date.value || !amount.value || !category.value) return;
-  await budgetStore.create({
+  const payload = {
     type: type.value,
     date: date.value,
     amount: amount.value,
     category: category.value,
     detailCategory: detailCategory.value,
     memo: memo.value,
-  });
+  };
+
+  if (isEditMode.value) {
+    await budgetStore.update(editId.value, payload);
+  } else {
+    await budgetStore.create(payload);
+  }
+
   router.push('/transactions');
 };
 
-const onCancel = () => router.push('/');
+const onCancel = () => router.push(isEditMode.value ? '/transactions' : '/');
 </script>
 
 <style scoped>

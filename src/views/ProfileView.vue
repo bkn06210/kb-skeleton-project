@@ -9,18 +9,18 @@
       <!-- Name & Email -->
       <div class="form-row">
         <div class="field">
-          <label class="field-label">Name</label>
-          <input class="form-input" type="text" v-model="name" placeholder="Name" />
+          <label class="field-label">이름</label>
+          <input class="form-input" type="text" v-model="name" placeholder="이름" />
         </div>
         <div class="field">
-          <label class="field-label">Email</label>
-          <input class="form-input" type="email" v-model="email" placeholder="Email" />
+          <label class="field-label">이메일</label>
+          <input class="form-input" type="email" v-model="email" placeholder="이메일" />
         </div>
       </div>
 
       <!-- Save -->
       <div class="form-actions">
-        <button class="btn btn-save" @click="save">Save profile</button>
+        <button class="btn btn-save" @click="save">프로필 저장</button>
       </div>
     </div>
   </div>

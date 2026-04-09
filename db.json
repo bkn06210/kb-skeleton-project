@@ -103,15 +103,6 @@
       "memo": "월 통신비",
       "cycle": "monthly",
       "day": 1
-    },
-    {
-      "id": "0002",
-      "category": "유흥",
-      "detailCategory": "넷플릭스",
-      "amount": 17000,
-      "memo": "넷플릭스 구독",
-      "cycle": "monthly",
-      "day": 15
     }
   ],
   "profile": {

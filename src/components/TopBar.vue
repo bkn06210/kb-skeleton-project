@@ -66,7 +66,13 @@ const titleMap = {
   profile: 'Profile',
 };
 
-const pageTitle = computed(() => titleMap[route.name] ?? 'My wallet');
+const pageTitle = computed(() => {
+  if (route.name === 'add' && typeof route.query.id === 'string') {
+    return 'Edit transaction';
+  }
+
+  return titleMap[route.name] ?? 'My wallet';
+});
 </script>
 
 <style scoped>

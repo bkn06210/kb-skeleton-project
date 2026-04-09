@@ -31,6 +31,9 @@ import { useCategoryStore } from '../stores/categoryStore';
 import { useBudgetStore } from '../stores/budgetStore';
 import { storeToRefs } from 'pinia';
 import CategorySelect from './CategorySelect.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
   transactionId: {
@@ -74,11 +77,12 @@ const save = async () => {
     detailCategory: detailCategory.value,
     memo: memo.value,
   };
+  
   if (props.transactionId) {
     await budgetStore.update(props.transactionId, data);
   } else {
     await budgetStore.create(data);
   }
-  emit('saved');
+  router.push('/add');
 };
 </script>

@@ -107,6 +107,17 @@
       </div>
     </div>
 
+    <div class="summary-cards">
+      <div class="card income-card">
+        <div class="card-label">수입</div>
+        <div class="card-amount income">+{{ formatAmount(totalIncome) }}</div>
+      </div>
+      <div class="card expense-card">
+        <div class="card-label">지출</div>
+        <div class="card-amount expense">-{{ formatAmount(totalExpense) }}</div>
+      </div>
+    </div>
+
     <div class="transaction-list">
       <div
         v-for="item in sortedTransactions"
@@ -207,6 +218,18 @@ const {
 } = storeToRefs(budgetStore);
 
 const sortArrow = computed(() => (sortOrder.value === 'desc' ? '↓' : '↑'));
+
+const totalIncome = computed(() =>
+  filteredTransactions.value
+    .filter((t) => t.type === 'income')
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0)
+);
+
+const totalExpense = computed(() =>
+  filteredTransactions.value
+    .filter((t) => t.type === 'expense')
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0)
+);
 
 const sortedTransactions = computed(() => {
   return [...filteredTransactions.value].sort((a, b) => {
@@ -408,6 +431,39 @@ const handleDelete = async (id) => {
   color: var(--text-bright);
 }
 
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--card-bg, var(--bg));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.card-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.card-amount {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.income {
+  color: var(--income);
+}
+
+.expense {
+  color: var(--expense);
+}
+
 .custom-date-inputs {
   display: flex;
   align-items: center;
@@ -583,6 +639,10 @@ const handleDelete = async (id) => {
 }
 
 @media (max-width: 860px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
   .filter-group {
     flex-direction: column;
     align-items: flex-start;

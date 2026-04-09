@@ -8,20 +8,41 @@
           :class="{ active: type === 'expense', expense: type === 'expense' }"
           @click="type = 'expense'"
         >
+<<<<<<< HEAD
+          지출
+=======
           Expense
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
         </button>
         <button
           class="toggle-btn"
           :class="{ active: type === 'income', income: type === 'income' }"
           @click="type = 'income'"
         >
+<<<<<<< HEAD
+          수입
+=======
           Income
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
         </button>
       </div>
 
       <!-- Date & Amount -->
       <div class="form-row">
         <div class="field">
+<<<<<<< HEAD
+          <label class="field-label" for="input-date">
+            날짜 <span class="badge required">필수</span>
+          </label>
+          <input id="input-date" class="form-input" type="date" v-model="date" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="input-amount">
+            금액 <span class="badge required">필수</span>
+          </label>
+          <input
+            id="input-amount"
+=======
           <label class="field-label">
             Date <span class="badge required">required</span>
           </label>
@@ -32,6 +53,7 @@
             Amount <span class="badge required">required</span>
           </label>
           <input
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
             class="form-input"
             type="text"
             inputmode="numeric"
@@ -45,10 +67,18 @@
       <!-- Category & Detail Category -->
       <div class="form-row">
         <div class="field">
+<<<<<<< HEAD
+          <label class="field-label" for="input-category">
+            카테고리 <span class="badge required">필수</span>
+          </label>
+          <CategorySelect
+            id="input-category"
+=======
           <label class="field-label">
             Category <span class="badge required">required</span>
           </label>
           <CategorySelect
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
             class="form-select"
             v-model="category"
             :categories="
@@ -57,6 +87,17 @@
           />
         </div>
         <div class="field">
+<<<<<<< HEAD
+          <label class="field-label" for="input-detail">
+            세부 카테고리 <span class="badge optional">선택</span>
+          </label>
+          <input
+            id="input-detail"
+            class="form-input"
+            type="text"
+            v-model="detailCategory"
+            placeholder="예) 점심"
+=======
           <label class="field-label">
             Detail category <span class="badge optional">optional</span>
           </label>
@@ -65,12 +106,23 @@
             type="text"
             v-model="detailCategory"
             placeholder="e.g. lunch"
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           />
         </div>
       </div>
 
       <!-- Memo -->
       <div class="field">
+<<<<<<< HEAD
+        <label class="field-label" for="input-memo">
+          메모 <span class="badge optional">선택</span>
+        </label>
+        <textarea
+          id="input-memo"
+          class="form-textarea"
+          v-model="memo"
+          placeholder="메모를 입력하세요"
+=======
         <label class="field-label">
           Memo <span class="badge optional">optional</span>
         </label>
@@ -78,29 +130,52 @@
           class="form-textarea"
           v-model="memo"
           placeholder="Add a note..."
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           rows="4"
         />
       </div>
 
       <!-- Buttons -->
       <div class="form-actions">
+<<<<<<< HEAD
+        <button class="btn btn-save" @click="save">저장</button>
+        <button class="btn btn-cancel" @click="onCancel">취소</button>
+=======
         <button class="btn btn-save" @click="save">
           {{ isEditMode ? 'Update' : 'Save' }}
         </button>
         <button class="btn btn-cancel" @click="onCancel">Cancel</button>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+=======
 import { computed, ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 import { useCategoryStore } from '../stores/categoryStore';
 import { useBudgetStore } from '../stores/budgetStore';
 import CategorySelect from '../components/CategorySelect.vue';
 
+<<<<<<< HEAD
+const router = useRouter();
+const route = useRoute();
+const categoryStore = useCategoryStore();
+const budgetStore = useBudgetStore();
+
+const incomeCategories = computed(() => categoryStore.incomeCategories);
+const expenseCategories = computed(() => categoryStore.expenseCategories);
+
+const type = ref('expense');
+const date = ref(new Date().toISOString().slice(0, 10));
+=======
 const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore();
@@ -115,18 +190,42 @@ const isEditMode = computed(() => editId.value.length > 0);
 
 const type = ref('expense');
 const date = ref(getToday());
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 const amount = ref(0);
 const amountDisplay = ref('');
 const category = ref('');
 const detailCategory = ref('');
 const memo = ref('');
+<<<<<<< HEAD
+const editId = ref(null);
+
+const onAmountInput = (e) => {
+  const raw = e.target.value.replaceAll(/[^\d]/g, '');
+=======
 
 const onAmountInput = (e) => {
   const raw = e.target.value.replace(/[^\d]/g, '');
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
   amount.value = raw ? Number(raw) : 0;
   amountDisplay.value = raw ? Number(raw).toLocaleString() : '';
 };
 
+<<<<<<< HEAD
+onMounted(async () => {
+  await categoryStore.fetchCategories();
+  const id = route.query.id;
+  if (id) {
+    editId.value = id;
+    const data = await budgetStore.fetchById(id);
+    type.value = data.type;
+    date.value = data.date;
+    amount.value = data.amount;
+    amountDisplay.value = Number(data.amount).toLocaleString();
+    category.value = data.category;
+    detailCategory.value = data.detailCategory || '';
+    memo.value = data.memo || '';
+  }
+=======
 const resetForm = () => {
   type.value = 'expense';
   date.value = getToday();
@@ -170,6 +269,7 @@ onMounted(async () => {
 watch(editId, async (newId, oldId) => {
   if (newId === oldId) return;
   await loadTransaction();
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 });
 
 const save = async () => {
@@ -182,17 +282,28 @@ const save = async () => {
     detailCategory: detailCategory.value,
     memo: memo.value,
   };
+<<<<<<< HEAD
+  if (editId.value) {
+=======
 
   if (isEditMode.value) {
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
     await budgetStore.update(editId.value, payload);
   } else {
     await budgetStore.create(payload);
   }
+<<<<<<< HEAD
+  router.push('/transactions');
+};
+
+const onCancel = () => router.push('/transactions');
+=======
 
   router.push('/transactions');
 };
 
 const onCancel = () => router.push(isEditMode.value ? '/transactions' : '/');
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 </script>
 
 <style scoped>
@@ -318,13 +429,19 @@ const onCancel = () => router.push(isEditMode.value ? '/transactions' : '/');
   min-height: 130px;
 }
 
+<<<<<<< HEAD
+=======
 /* Placeholder color */
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 .form-input::placeholder,
 .form-textarea::placeholder {
   color: var(--text-muted);
 }
 
+<<<<<<< HEAD
+=======
 /* Hide number input spinners */
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 .form-input::-webkit-outer-spin-button,
 .form-input::-webkit-inner-spin-button {
   -webkit-appearance: none;

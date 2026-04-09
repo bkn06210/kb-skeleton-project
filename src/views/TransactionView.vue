@@ -1,5 +1,28 @@
 <template>
   <div class="transaction-view">
+<<<<<<< HEAD
+    <!-- 필터 영역 -->
+    <div class="filters-section">
+      <!-- 타입 -->
+      <div class="filter-group">
+        <span class="filter-label">타입</span>
+        <div class="toggle-group">
+          <button class="toggle-btn" :class="{ active: selectedType === 'all' }" @click="selectedType = 'all'">전체</button>
+          <button class="toggle-btn" :class="{ active: selectedType === 'income' }" @click="selectedType = 'income'">수입</button>
+          <button class="toggle-btn" :class="{ active: selectedType === 'expense' }" @click="selectedType = 'expense'">지출</button>
+        </div>
+      </div>
+
+      <!-- 기간 -->
+      <div class="filter-group" style="align-items: flex-start">
+        <span class="filter-label" style="margin-top: 8px">기간</span>
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%">
+          <div class="chip-group">
+            <button class="chip" :class="{ active: selectedPeriod === 'all' }" @click="selectedPeriod = 'all'">전체</button>
+            <button class="chip" :class="{ active: selectedPeriod === 'month' }" @click="selectedPeriod = 'month'">이번 달</button>
+            <button class="chip" :class="{ active: selectedPeriod === 'week' }" @click="selectedPeriod = 'week'">이번 주</button>
+            <button class="chip" :class="{ active: selectedPeriod === 'custom' }" @click="selectedPeriod = 'custom'">직접 설정</button>
+=======
     <section class="filters-section">
       <div class="filters-header">
         <div>
@@ -83,8 +106,8 @@
             >
               <span>전체</span>
             </button>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           </div>
-
           <div v-if="selectedPeriod === 'custom'" class="custom-date-inputs">
             <input type="date" v-model="customStartDate" class="date-input" />
             <span class="date-divider">~</span>
@@ -93,9 +116,13 @@
         </div>
       </div>
 
+      <!-- 카테고리 -->
       <div class="filter-group">
         <span class="filter-label">카테고리</span>
         <div class="chip-group">
+<<<<<<< HEAD
+          <button class="chip" :class="{ active: selectedCategory === 'all' }" @click="selectedCategory = 'all'">전체</button>
+=======
           <button
             class="chip category-chip"
             :class="{ active: selectedCategory === 'all' }"
@@ -103,17 +130,34 @@
           >
             <span>전체</span>
           </button>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           <button
             v-for="cat in availableCategories"
             :key="cat"
             class="chip category-chip"
             :class="{ active: selectedCategory === cat }"
+<<<<<<< HEAD
+            @click="selectedCategory = cat"
+          >{{ cat }}</button>
+        </div>
+      </div>
+
+      <!-- 정렬 -->
+      <div class="filter-group">
+        <span class="filter-label">정렬</span>
+        <div class="chip-group">
+          <button class="chip" :class="{ active: selectedSort === 'newest' }" @click="selectedSort = 'newest'">최신순</button>
+          <button class="chip" :class="{ active: selectedSort === 'oldest' }" @click="selectedSort = 'oldest'">오래된 순</button>
+          <button class="chip" :class="{ active: selectedSort === 'amountDesc' }" @click="selectedSort = 'amountDesc'">금액 높은 순</button>
+          <button class="chip" :class="{ active: selectedSort === 'amountAsc' }" @click="selectedSort = 'amountAsc'">금액 낮은 순</button>
+=======
             :style="getCategoryStyle(cat)"
             @click="handleCategoryClick(cat)"
           >
             <span class="chip-icon">{{ getCategoryMeta(cat).icon }}</span>
             <span>{{ cat }}</span>
           </button>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
         </div>
       </div>
     </section>
@@ -135,6 +179,12 @@
       </div>
     </section>
 
+    <!-- 목록 헤더 -->
+    <div class="list-header">
+      <span class="list-count">총 {{ filteredTransactions.length }}건</span>
+    </div>
+
+    <!-- 거래 목록 -->
     <div class="transaction-list">
       <article
         v-for="item in sortedTransactions"
@@ -143,15 +193,29 @@
         :style="getCategoryStyle(item.category, item.type)"
       >
         <div class="item-left">
+<<<<<<< HEAD
+          <div class="item-icon" :class="item.type">
+            <svg v-if="item.type === 'expense'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" />
+            </svg>
+            <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
+            </svg>
+=======
           <div
             class="item-icon"
             :style="getCategoryStyle(item.category, item.type)"
           >
             {{ getCategoryMeta(item.category, item.type).icon }}
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           </div>
 
           <div class="item-details">
             <div class="item-title">
+<<<<<<< HEAD
+              <span class="category-badge">{{ item.category }}</span>
+              <span class="memo">{{ item.detailCategory || item.memo || '-' }}</span>
+=======
               <span
                 class="category-badge"
                 :style="getCategoryStyle(item.category, item.type)"
@@ -170,72 +234,60 @@
             <div class="item-meta">
               <span>{{ formatDate(item.date) }}</span>
               <span v-if="item.detailCategory">{{ item.detailCategory }}</span>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
             </div>
           </div>
         </div>
 
         <div class="item-right">
           <div class="amount" :class="item.type">
+<<<<<<< HEAD
+            {{ item.type === 'income' ? '+' : '-' }}{{ item.amount.toLocaleString() }}원
+=======
             {{ item.type === 'income' ? '+' : '-'
             }}{{ formatAmount(item.amount) }}원
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
           </div>
           <div class="item-actions">
-            <button
-              class="action-btn edit-btn"
-              title="수정"
-              @click="handleEdit(item.id)"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                />
-                <path
-                  d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                />
+            <button class="action-btn" title="수정" @click="handleEdit(item.id)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
             </button>
-            <button
-              class="action-btn delete-btn"
-              title="삭제"
-              @click="handleDelete(item.id)"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
+            <button class="action-btn delete-btn" title="삭제" @click="handleDelete(item.id)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6" />
-                <path
-                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
             </button>
           </div>
         </div>
+<<<<<<< HEAD
+      </div>
+
+      <div v-if="filteredTransactions.length === 0" class="empty">
+        해당하는 거래 내역이 없습니다.
+=======
       </article>
 
       <div v-if="sortedTransactions.length === 0" class="empty-state">
         <div class="empty-icon">🧾</div>
         <strong>조건에 맞는 거래가 없어요.</strong>
         <span>필터를 바꾸거나 새로운 거래를 추가해 보세요.</span>
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
+import { onMounted, computed } from 'vue';
+=======
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 import { useBudgetStore } from '../stores/budgetStore';
 import { useRouter } from 'vue-router';
 
@@ -257,15 +309,15 @@ const router = useRouter();
 const budgetStore = useBudgetStore();
 const sortOrder = ref('desc');
 
-const {
-  filteredTransactions,
-  selectedType,
-  selectedCategory,
-  selectedPeriod,
-  availableCategories,
-  customStartDate,
-  customEndDate,
-} = storeToRefs(budgetStore);
+const filteredTransactions = computed(() => budgetStore.filteredTransactions);
+const availableCategories = computed(() => budgetStore.availableCategories);
+
+const selectedType = computed({ get: () => budgetStore.selectedType, set: (v) => (budgetStore.selectedType = v) });
+const selectedCategory = computed({ get: () => budgetStore.selectedCategory, set: (v) => (budgetStore.selectedCategory = v) });
+const selectedPeriod = computed({ get: () => budgetStore.selectedPeriod, set: (v) => (budgetStore.selectedPeriod = v) });
+const selectedSort = computed({ get: () => budgetStore.selectedSort, set: (v) => (budgetStore.selectedSort = v) });
+const customStartDate = computed({ get: () => budgetStore.customStartDate, set: (v) => (budgetStore.customStartDate = v) });
+const customEndDate = computed({ get: () => budgetStore.customEndDate, set: (v) => (budgetStore.customEndDate = v) });
 
 const sortArrow = computed(() => (sortOrder.value === 'desc' ? '↓' : '↑'));
 const sortLabel = computed(() =>
@@ -357,15 +409,30 @@ const handleDelete = async (id) => {
 .transaction-view {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
+  gap: 16px;
+  height: 100%;
+}
+
+/* 필터 */
+=======
   gap: 20px;
   min-height: 100%;
 }
 
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 .filters-section {
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
+  gap: 14px;
+  background: var(--card-bg);
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+=======
   gap: 18px;
   padding: 22px;
   border-radius: 20px;
@@ -383,6 +450,7 @@ const handleDelete = async (id) => {
     ),
     var(--card-bg);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .filters-header {
@@ -465,25 +533,59 @@ const handleDelete = async (id) => {
 }
 
 .filter-label {
+<<<<<<< HEAD
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 56px;
+  letter-spacing: 0.3px;
+=======
   min-width: 64px;
   padding-top: 4px;
   font-size: 13px;
   font-weight: 700;
   color: rgba(226, 232, 240, 0.78);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .filter-stack {
   display: flex;
+<<<<<<< HEAD
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.toggle-btn.active {
+  background: var(--text-bright);
+  color: #1e293b;
+=======
   flex-direction: column;
   gap: 12px;
   width: 100%;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .toggle-group,
 .chip-group {
   display: flex;
   flex-wrap: wrap;
+<<<<<<< HEAD
+  gap: 6px;
+=======
   gap: 10px;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .toggle-group {
@@ -495,6 +597,16 @@ const handleDelete = async (id) => {
 
 .toggle-btn,
 .chip {
+<<<<<<< HEAD
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+=======
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -512,10 +624,54 @@ const handleDelete = async (id) => {
     background 0.18s ease,
     color 0.18s ease,
     box-shadow 0.18s ease;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .toggle-btn:hover,
 .chip:hover {
+<<<<<<< HEAD
+  border-color: var(--text-muted);
+  color: var(--text-bright);
+}
+.chip.active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #93c5fd;
+}
+
+/* 날짜 입력 */
+.custom-date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.date-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-bright);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+}
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* 목록 헤더 */
+.list-header {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+.list-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 거래 목록 */
+=======
   transform: translateY(-1px);
   border-color: rgba(191, 219, 254, 0.32);
   color: var(--text-bright);
@@ -587,16 +743,24 @@ const handleDelete = async (id) => {
   gap: 10px;
 }
 
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 .transaction-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .transaction-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+<<<<<<< HEAD
+  background: var(--card-bg);
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, transform 0.15s;
+=======
   gap: 16px;
   padding: 18px;
   border-radius: 18px;
@@ -611,24 +775,50 @@ const handleDelete = async (id) => {
     transform 0.18s ease,
     border-color 0.18s ease,
     box-shadow 0.18s ease;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .transaction-item:hover {
+<<<<<<< HEAD
+  border-color: rgba(148, 163, 184, 0.3);
+  transform: translateY(-1px);
+=======
   transform: translateY(-2px);
   border-color: rgba(191, 219, 254, 0.24);
   box-shadow:
     inset 4px 0 0 var(--category-color),
     0 18px 36px rgba(15, 23, 42, 0.24);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .item-left {
   display: flex;
   align-items: center;
   gap: 14px;
+<<<<<<< HEAD
+=======
   min-width: 0;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .item-icon {
+<<<<<<< HEAD
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.item-icon.income {
+  background: rgba(74, 222, 128, 0.12);
+  color: #86efac;
+}
+.item-icon.expense {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+=======
   width: 52px;
   height: 52px;
   flex-shrink: 0;
@@ -640,13 +830,18 @@ const handleDelete = async (id) => {
   color: var(--category-color);
   font-size: 24px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .item-details {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
+  gap: 3px;
+=======
   gap: 6px;
   min-width: 0;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .item-title {
@@ -669,6 +864,15 @@ const handleDelete = async (id) => {
 }
 
 .category-badge {
+<<<<<<< HEAD
+  font-size: 11px;
+  padding: 2px 7px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: var(--text-muted);
+  white-space: nowrap;
+=======
   background: var(--category-bg);
   color: var(--category-color);
 }
@@ -677,6 +881,7 @@ const handleDelete = async (id) => {
   border: 1px solid rgba(148, 163, 184, 0.16);
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.04);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .type-badge.income {
@@ -690,8 +895,13 @@ const handleDelete = async (id) => {
 }
 
 .memo {
+<<<<<<< HEAD
+  font-size: 14px;
+  font-weight: 500;
+=======
   font-size: 16px;
   font-weight: 600;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
   color: var(--text-bright);
   white-space: nowrap;
   overflow: hidden;
@@ -715,20 +925,35 @@ const handleDelete = async (id) => {
 .item-right {
   display: flex;
   align-items: center;
+<<<<<<< HEAD
+  gap: 14px;
+=======
   gap: 16px;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
   flex-shrink: 0;
 }
 
 .amount {
+<<<<<<< HEAD
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 100px;
+  text-align: right;
+=======
   min-width: 110px;
   text-align: right;
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.03em;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .amount.income {
+<<<<<<< HEAD
+  color: #86efac;
+=======
   color: #60a5fa;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .amount.expense {
@@ -737,10 +962,27 @@ const handleDelete = async (id) => {
 
 .item-actions {
   display: flex;
+<<<<<<< HEAD
+  gap: 5px;
+=======
   gap: 8px;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .action-btn {
+<<<<<<< HEAD
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+=======
   width: 36px;
   height: 36px;
   display: flex;
@@ -755,13 +997,30 @@ const handleDelete = async (id) => {
     color 0.18s ease,
     background 0.18s ease,
     border-color 0.18s ease;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .action-btn:hover {
+<<<<<<< HEAD
+  background: rgba(255, 255, 255, 0.07);
+=======
   transform: translateY(-1px);
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
   color: var(--text-bright);
   background: rgba(255, 255, 255, 0.06);
 }
+<<<<<<< HEAD
+.action-btn.delete-btn:hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.3);
+}
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 40px 0;
+=======
 
 .delete-btn:hover {
   color: #fecaca;
@@ -791,6 +1050,7 @@ const handleDelete = async (id) => {
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
+>>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 @media (max-width: 860px) {

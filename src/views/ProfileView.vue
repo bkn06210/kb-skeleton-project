@@ -9,31 +9,18 @@
       <!-- Name & Email -->
       <div class="form-row">
         <div class="field">
-<<<<<<< HEAD
-          <label class="field-label" for="input-name">이름</label>
-          <input id="input-name" class="form-input" type="text" v-model="name" placeholder="이름" />
+          <label class="field-label">이름</label>
+          <input class="form-input" type="text" v-model="name" placeholder="이름" />
         </div>
         <div class="field">
-          <label class="field-label" for="input-email">이메일</label>
-          <input id="input-email" class="form-input" type="email" v-model="email" placeholder="이메일" />
-=======
-          <label class="field-label">Name</label>
-          <input class="form-input" type="text" v-model="name" placeholder="Name" />
-        </div>
-        <div class="field">
-          <label class="field-label">Email</label>
-          <input class="form-input" type="email" v-model="email" placeholder="Email" />
->>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
+          <label class="field-label">이메일</label>
+          <input class="form-input" type="email" v-model="email" placeholder="이메일" />
         </div>
       </div>
 
       <!-- Save -->
       <div class="form-actions">
-<<<<<<< HEAD
         <button class="btn btn-save" @click="save">프로필 저장</button>
-=======
-        <button class="btn btn-save" @click="save">Save profile</button>
->>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
       </div>
     </div>
   </div>
@@ -156,10 +143,6 @@ const save = async () => {
   border: none;
   color: #fff;
   transition: background 0.15s;
-<<<<<<< HEAD
-  cursor: pointer;
-=======
->>>>>>> f764497f84db2c35dddb55cb59f7f0c93768ded7
 }
 
 .btn-save:hover {

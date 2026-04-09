@@ -10,16 +10,16 @@ import {
 
 export const useBudgetStore = defineStore('budget', () => {
   const transactions = ref([]);
-  const selectedPeriod = ref('month');
+  const selectedPeriod = ref('all');
   const selectedType = ref('all');
   const selectedCategory = ref('all');
+  const selectedSort = ref('newest');
   const customStartDate = ref('');
   const customEndDate = ref('');
 
   const fetchTransactions = async (params = {}) => {
     try {
       const res = await getBudget(params);
-
       transactions.value = res.data.sort(
         (a, b) => new Date(b.date) - new Date(a.date),
       );
@@ -58,51 +58,50 @@ export const useBudgetStore = defineStore('budget', () => {
       selectedType.value === 'all'
         ? transactions.value
         : transactions.value.filter((t) => t.type === selectedType.value);
-
     const categories = typeFiltered.map((t) => t.category);
     return [...new Set(categories)];
   });
 
   const filteredTransactions = computed(() => {
-    return transactions.value.filter((item) => {
-      // 1. 타입 필터
+    const filtered = transactions.value.filter((item) => {
       const matchType =
         selectedType.value === 'all' || item.type === selectedType.value;
 
-    
       const matchCategory =
         selectedCategory.value === 'all' ||
         item.category === selectedCategory.value;
 
-     
       let matchPeriod = true;
       if (selectedPeriod.value !== 'all') {
         const txDate = new Date(item.date);
         const now = new Date();
 
         if (selectedPeriod.value === 'month') {
-          
           matchPeriod =
             txDate.getFullYear() === now.getFullYear() &&
             txDate.getMonth() === now.getMonth();
         } else if (selectedPeriod.value === 'week') {
-         
           const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
           matchPeriod = txDate >= oneWeekAgo && txDate <= now;
         } else if (selectedPeriod.value === 'custom') {
-          
           if (customStartDate.value && customEndDate.value) {
             const start = new Date(customStartDate.value);
             const end = new Date(customEndDate.value);
             end.setHours(23, 59, 59, 999);
             matchPeriod = txDate >= start && txDate <= end;
-          } else {
-            matchPeriod = true;
           }
         }
       }
 
       return matchType && matchCategory && matchPeriod;
+    });
+
+    return [...filtered].sort((a, b) => {
+      if (selectedSort.value === 'newest') return new Date(b.date) - new Date(a.date);
+      if (selectedSort.value === 'oldest') return new Date(a.date) - new Date(b.date);
+      if (selectedSort.value === 'amountDesc') return b.amount - a.amount;
+      if (selectedSort.value === 'amountAsc') return a.amount - b.amount;
+      return 0;
     });
   });
 
@@ -111,6 +110,7 @@ export const useBudgetStore = defineStore('budget', () => {
     selectedType,
     selectedCategory,
     selectedPeriod,
+    selectedSort,
     fetchTransactions,
     fetchById,
     create,

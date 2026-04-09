@@ -141,6 +141,17 @@
       "day": 15
     }
   ],
+  "monthlyBudget": [
+    {
+      "id": "ea22lwuBCAQ",
+      "month": "2026-04",
+      "total": 200000,
+      "categories": {
+        "식비": 3000,
+        "교통비": 30000
+      }
+    }
+  ],
   "profile": {
     "name": "홍길동",
     "email": "hong@example.com"

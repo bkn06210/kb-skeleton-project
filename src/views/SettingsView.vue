@@ -3,20 +3,13 @@
     <!-- Recurring Expenses -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">정기 지출</h2>
+        <h2 class="section-title">Recurring expenses</h2>
         <button class="btn-add" @click="showForm = !showForm">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          추가
+          Add
         </button>
       </div>
 
@@ -24,9 +17,7 @@
       <div v-if="showForm" class="add-form">
         <div class="form-row">
           <div class="field">
-            <label class="field-label"
-              >카테고리 <span class="badge required">필수</span></label
-            >
+            <label class="field-label">Category <span class="badge required">required</span></label>
             <CategorySelect
               class="form-select"
               v-model="newItem.category"
@@ -34,22 +25,13 @@
             />
           </div>
           <div class="field">
-            <label class="field-label"
-              >세부 항목 <span class="badge optional">선택</span></label
-            >
-            <input
-              class="form-input"
-              type="text"
-              v-model="newItem.detailCategory"
-              placeholder="예) 넷플릭스"
-            />
+            <label class="field-label">Detail <span class="badge optional">optional</span></label>
+            <input class="form-input" type="text" v-model="newItem.detailCategory" placeholder="e.g. Netflix" />
           </div>
         </div>
         <div class="form-row">
           <div class="field">
-            <label class="field-label"
-              >금액 <span class="badge required">필수</span></label
-            >
+            <label class="field-label">Amount <span class="badge required">required</span></label>
             <input
               class="form-input"
               type="text"
@@ -60,75 +42,38 @@
             />
           </div>
           <div class="field">
-            <label class="field-label"
-              >매월 결제일 <span class="badge required">필수</span></label
-            >
-            <input
-              class="form-input"
-              type="number"
-              v-model="newItem.day"
-              placeholder="1"
-              min="1"
-              max="31"
-            />
+            <label class="field-label">Day of month <span class="badge required">required</span></label>
+            <input class="form-input" type="number" v-model="newItem.day" placeholder="1" min="1" max="31" />
           </div>
         </div>
         <div class="form-actions">
-          <button class="btn btn-save" @click="addItem">저장</button>
-          <button class="btn btn-cancel" @click="closeForm">취소</button>
+          <button class="btn btn-save" @click="addItem">Save</button>
+          <button class="btn btn-cancel" @click="closeForm">Cancel</button>
         </div>
       </div>
 
       <!-- List -->
       <div class="expense-list">
         <div v-if="periodicExpenses.length === 0" class="empty">
-          정기 지출이 없습니다
+          No recurring expenses
         </div>
-        <div
-          v-for="item in periodicExpenses"
-          :key="item.id"
-          class="expense-item"
-        >
+        <div v-for="item in periodicExpenses" :key="item.id" class="expense-item">
           <div class="expense-icon">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
           </div>
           <div class="expense-info">
-            <span class="expense-name">{{
-              item.detailCategory || item.category
-            }}</span>
-            <span class="expense-sub">매월 / {{ item.category }}</span>
+            <span class="expense-name">{{ item.detailCategory || item.category }}</span>
+            <span class="expense-sub">Monthly / {{ item.category }}</span>
           </div>
           <div class="expense-right">
-            <span class="expense-amount"
-              >-{{ item.amount.toLocaleString() }}</span
-            >
-            <span class="expense-day"
-              >매월 {{ item.day }}일</span
-            >
+            <span class="expense-amount">-{{ item.amount.toLocaleString() }}</span>
+            <span class="expense-day">Every {{ item.day }}{{ daySuffix(item.day) }}</span>
           </div>
-          <button
-            class="btn-delete"
-            @click="removeItem(item.id)"
-            title="삭제"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
+          <button class="btn-delete" @click="removeItem(item.id)" title="Delete">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -153,13 +98,7 @@ const { expenseCategories } = storeToRefs(categoryStore);
 
 const showForm = ref(false);
 const newAmountDisplay = ref('');
-const newItem = ref({
-  category: '',
-  detailCategory: '',
-  amount: 0,
-  cycle: 'monthly',
-  day: '',
-});
+const newItem = ref({ category: '', detailCategory: '', amount: 0, cycle: 'monthly', day: '' });
 
 onMounted(async () => {
   await profileStore.fetchPeriodicExpenses();
@@ -173,21 +112,14 @@ const onNewAmountInput = (e) => {
 };
 
 const addItem = async () => {
-  if (!newItem.value.category || !newItem.value.amount || !newItem.value.day)
-    return;
+  if (!newItem.value.category || !newItem.value.amount || !newItem.value.day) return;
   await profileStore.addPeriodic({ ...newItem.value });
   closeForm();
 };
 
 const closeForm = () => {
   showForm.value = false;
-  newItem.value = {
-    category: '',
-    detailCategory: '',
-    amount: 0,
-    cycle: 'monthly',
-    day: '',
-  };
+  newItem.value = { category: '', detailCategory: '', amount: 0, cycle: 'monthly', day: '' };
   newAmountDisplay.value = '';
 };
 
@@ -339,10 +271,7 @@ const daySuffix = (day) => {
   font-size: 13px;
   font-weight: 500;
   font-family: var(--sans);
-  transition:
-    background 0.15s,
-    border-color 0.15s,
-    color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .btn-save {
@@ -442,9 +371,7 @@ const daySuffix = (day) => {
   border-radius: 4px;
   display: flex;
   align-items: center;
-  transition:
-    color 0.15s,
-    background 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 
 .btn-delete:hover {

@@ -8,14 +8,14 @@
           :class="{ active: type === 'expense', expense: type === 'expense' }"
           @click="type = 'expense'"
         >
-          지출
+          Expense
         </button>
         <button
           class="toggle-btn"
           :class="{ active: type === 'income', income: type === 'income' }"
           @click="type = 'income'"
         >
-          수입
+          Income
         </button>
       </div>
 
@@ -23,13 +23,13 @@
       <div class="form-row">
         <div class="field">
           <label class="field-label">
-            날짜 <span class="badge required">필수</span>
+            Date <span class="badge required">required</span>
           </label>
           <input class="form-input" type="date" v-model="date" />
         </div>
         <div class="field">
           <label class="field-label">
-            금액 <span class="badge required">필수</span>
+            Amount <span class="badge required">required</span>
           </label>
           <input
             class="form-input"
@@ -46,7 +46,7 @@
       <div class="form-row">
         <div class="field">
           <label class="field-label">
-            카테고리 <span class="badge required">필수</span>
+            Category <span class="badge required">required</span>
           </label>
           <CategorySelect
             class="form-select"
@@ -58,13 +58,13 @@
         </div>
         <div class="field">
           <label class="field-label">
-            세부 카테고리 <span class="badge optional">선택</span>
+            Detail category <span class="badge optional">optional</span>
           </label>
           <input
             class="form-input"
             type="text"
             v-model="detailCategory"
-            placeholder="예) 점심"
+            placeholder="e.g. lunch"
           />
         </div>
       </div>
@@ -72,20 +72,20 @@
       <!-- Memo -->
       <div class="field">
         <label class="field-label">
-          메모 <span class="badge optional">선택</span>
+          Memo <span class="badge optional">optional</span>
         </label>
         <textarea
           class="form-textarea"
           v-model="memo"
-          placeholder="메모를 입력하세요"
+          placeholder="Add a note..."
           rows="4"
         />
       </div>
 
       <!-- Buttons -->
       <div class="form-actions">
-        <button class="btn btn-save" @click="save">저장</button>
-        <button class="btn btn-cancel" @click="onCancel">취소</button>
+        <button class="btn btn-save" @click="save">Save</button>
+        <button class="btn btn-cancel" @click="onCancel">Cancel</button>
       </div>
     </div>
   </div>

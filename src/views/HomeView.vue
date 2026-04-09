@@ -81,7 +81,8 @@
       </div>
 
       <div v-else class="empty">
-        아직 월 예산이 없어요. 설정에서 예산을 추가하면 지출 진행률을 볼 수 있어요.
+        아직 월 예산이 없어요. 설정에서 예산을 추가하면 지출 진행률을 볼 수
+        있어요.
       </div>
     </div>
 
@@ -132,7 +133,8 @@
             </div>
             <div class="tx-right">
               <div class="tx-amount" :class="tx.type">
-                {{ tx.type === 'expense' ? '-' : '+' }}{{ formatAmount(tx.amount) }}
+                {{ tx.type === 'expense' ? '-' : '+'
+                }}{{ formatAmount(tx.amount) }}
               </div>
               <div class="tx-date">{{ formatDate(tx.date) }}</div>
             </div>
@@ -191,7 +193,14 @@ import { useBudgetStore } from '../stores/budgetStore';
 import { useMonthStore } from '../stores/monthStore';
 import { useMonthlyBudgetStore } from '../stores/monthlyBudgetStore';
 
-const COLORS = ['#ef4444', '#3b82f6', '#f59e0b', '#22c55e', '#a855f7', '#ec4899'];
+const COLORS = [
+  '#ef4444',
+  '#3b82f6',
+  '#f59e0b',
+  '#22c55e',
+  '#a855f7',
+  '#ec4899',
+];
 
 const budgetStore = useBudgetStore();
 const monthStore = useMonthStore();
@@ -271,7 +280,7 @@ const recentTransactions = computed(() =>
         dateKey <= recentTransactionEndKey.value
       );
     })
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .sort((a, b) => String(b.date).localeCompare(String(a.date))),
 );
 
 const expenseByCategory = computed(() => {
@@ -281,10 +290,14 @@ const expenseByCategory = computed(() => {
     .filter((transaction) => transaction.type === 'expense')
     .forEach((transaction) => {
       expenseMap[transaction.category] =
-        (expenseMap[transaction.category] || 0) + Number(transaction.amount || 0);
+        (expenseMap[transaction.category] || 0) +
+        Number(transaction.amount || 0);
     });
 
-  const total = Object.values(expenseMap).reduce((sum, amount) => sum + amount, 0);
+  const total = Object.values(expenseMap).reduce(
+    (sum, amount) => sum + amount,
+    0,
+  );
 
   return Object.entries(expenseMap)
     .sort((a, b) => b[1] - a[1])
@@ -325,7 +338,11 @@ const getTransactionDescription = (transaction) =>
 
 .budget-card {
   background:
-    radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 30%),
+    radial-gradient(
+      circle at top right,
+      rgba(34, 197, 94, 0.14),
+      transparent 30%
+    ),
     var(--card-bg);
 }
 
@@ -362,7 +379,11 @@ const getTransactionDescription = (transaction) =>
 
 .budget-panel {
   background:
-    radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 28%),
+    radial-gradient(
+      circle at top right,
+      rgba(96, 165, 250, 0.12),
+      transparent 28%
+    ),
     linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent 60%),
     var(--card-bg);
 }

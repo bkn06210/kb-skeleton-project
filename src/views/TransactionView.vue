@@ -52,13 +52,6 @@
             >
               직접 설정
             </button>
-            <button
-              class="chip"
-              :class="{ active: selectedPeriod === 'all' }"
-              @click="handlePeriodClick('all')"
-            >
-              전체
-            </button>
           </div>
 
           <div v-if="selectedPeriod === 'custom'" class="custom-date-inputs">
@@ -297,6 +290,10 @@ const handleResetFilters = () => {
 };
 
 onMounted(() => {
+  if (selectedPeriod.value === 'all') {
+    selectedPeriod.value = 'month';
+  }
+
   budgetStore.fetchTransactions();
 });
 

@@ -357,14 +357,6 @@
     {
       "category": "유흥",
       "detailCategory": "넷플릭스",
-      "amount": 1,
-      "cycle": "monthly",
-      "day": 1,
-      "id": "gBztk2k"
-    },
-    {
-      "category": "유흥",
-      "detailCategory": "넷플릭스",
       "amount": 277,
       "cycle": "monthly",
       "day": 1,
@@ -377,14 +369,6 @@
       "cycle": "monthly",
       "day": 25,
       "id": "y60MDEP"
-    },
-    {
-      "category": "유흥",
-      "detailCategory": "넷플릭스",
-      "amount": 11111111,
-      "cycle": "monthly",
-      "day": 25,
-      "id": "cP0IwTd"
     },
     {
       "category": "식비",

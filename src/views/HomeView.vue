@@ -190,6 +190,7 @@ import { storeToRefs } from 'pinia';
 import { useBudgetStore } from '../stores/budgetStore';
 import { useMonthStore } from '../stores/monthStore';
 import { useMonthlyBudgetStore } from '../stores/monthlyBudgetStore';
+import { useProfileStore } from '../stores/profileStore';
 
 const COLORS = [
   '#ef4444',
@@ -203,14 +204,17 @@ const COLORS = [
 const budgetStore = useBudgetStore();
 const monthStore = useMonthStore();
 const monthlyBudgetStore = useMonthlyBudgetStore();
+const profileStore = useProfileStore();
 
 const { transactions } = storeToRefs(budgetStore);
 const { currentBudget } = storeToRefs(monthlyBudgetStore);
+const { periodicExpenses } = storeToRefs(profileStore);
 
 const load = async () => {
   await Promise.all([
     budgetStore.fetchTransactions(),
     monthlyBudgetStore.fetchMonthlyBudgetByMonth(monthStore.yyyyMM),
+    profileStore.fetchPeriodicExpenses(),
   ]);
 };
 
@@ -229,11 +233,16 @@ const totalIncome = computed(() =>
     .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0),
 );
 
-const totalExpense = computed(() =>
-  monthTransactions.value
-    .filter((transaction) => transaction.type === 'expense')
-    .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0),
+const periodicTotal = computed(() =>
+  periodicExpenses.value.reduce((sum, e) => sum + Number(e.amount || 0), 0),
 );
+
+const totalExpense = computed(() => {
+  const txExpense = monthTransactions.value
+    .filter((transaction) => transaction.type === 'expense')
+    .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
+  return txExpense + periodicTotal.value;
+});
 
 const netBalance = computed(() => totalIncome.value - totalExpense.value);
 const totalBudget = computed(() => Number(currentBudget.value?.total) || 0);

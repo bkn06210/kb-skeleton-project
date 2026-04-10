@@ -118,6 +118,13 @@
       </div>
     </div>
 
+    <EditTransactionModal
+      :show="editModalVisible"
+      :transaction-id="editingId"
+      @saved="onEditSaved"
+      @cancel="editModalVisible = false"
+    />
+
     <div class="transaction-list">
       <div
         v-for="item in sortedTransactions"
@@ -201,10 +208,11 @@
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBudgetStore } from '../stores/budgetStore';
-import { useRouter } from 'vue-router';
+import EditTransactionModal from '../components/EditTransactionModal.vue';
 
-const router = useRouter();
 const budgetStore = useBudgetStore();
+const editModalVisible = ref(false);
+const editingId = ref('');
 const sortOrder = ref('desc');
 
 const {
@@ -283,7 +291,13 @@ onMounted(() => {
 });
 
 const handleEdit = (id) => {
-  router.push(`/add?id=${id}`);
+  editingId.value = id;
+  editModalVisible.value = true;
+};
+
+const onEditSaved = async () => {
+  editModalVisible.value = false;
+  await budgetStore.fetchTransactions();
 };
 
 const handleDelete = async (id) => {

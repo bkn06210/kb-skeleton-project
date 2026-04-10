@@ -19,7 +19,7 @@
           class="card-amount"
           :class="budgetRemaining >= 0 ? 'balance' : 'expense'"
         >
-          {{ totalBudget ? formatAmount(budgetRemaining) : '예산 설정하기' }}
+          {{ totalBudget ? (budgetRemaining < 0 ? '-' : '') + formatAmount(Math.abs(budgetRemaining)) : '예산 설정하기' }}
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@
             <strong
               :class="budgetRemaining >= 0 ? 'budget-positive' : 'budget-over'"
             >
-              {{ formatAmount(Math.abs(budgetRemaining)) }}
+              {{ (budgetRemaining < 0 ? '-' : '') + formatAmount(Math.abs(budgetRemaining)) }}
             </strong>
           </div>
         </div>

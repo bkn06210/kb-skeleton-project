@@ -2,25 +2,21 @@
   <div class="dashboard">
     <div class="summary-cards">
       <div class="card income-card">
-        <div class="card-label">수입</div>
+        <div class="card-label">이번 달 수입</div>
         <div class="card-amount income">+{{ formatAmount(totalIncome) }}</div>
+        <div class="card-sub">{{ monthStore.label }}</div>
       </div>
       <div class="card expense-card">
-        <div class="card-label">지출</div>
+        <div class="card-label">이번 달 지출</div>
         <div class="card-amount expense">-{{ formatAmount(totalExpense) }}</div>
+        <div class="card-sub">{{ monthStore.label }}</div>
       </div>
-      <div class="card balance-card">
-        <div class="card-label">잔액</div>
-        <div class="card-amount balance">{{ formatAmount(netBalance) }}</div>
-      </div>
-      <div class="card budget-card">
-        <div class="card-label">남은 예산</div>
-        <div
-          class="card-amount"
-          :class="budgetRemaining >= 0 ? 'balance' : 'expense'"
-        >
-          {{ totalBudget ? (budgetRemaining < 0 ? '-' : '') + formatAmount(Math.abs(budgetRemaining)) : '예산 설정하기' }}
+      <div class="card net-card">
+        <div class="card-label">이번 달 손익</div>
+        <div class="card-amount" :class="netBalance >= 0 ? 'income' : 'expense'">
+          {{ netBalance >= 0 ? '+' : '-' }}{{ formatAmount(Math.abs(netBalance)) }}
         </div>
+        <div class="card-sub">수입 - 지출</div>
       </div>
     </div>
 
@@ -28,7 +24,6 @@
       <div class="panel-header">
         <div class="panel-title-group">
           <span class="panel-title">월 예산 현황</span>
-          <span class="panel-caption">홈에서는 핵심 정보만 보여줘요</span>
         </div>
         <RouterLink to="/settings" class="view-all">예산 설정</RouterLink>
       </div>
@@ -74,7 +69,10 @@
             <strong
               :class="budgetRemaining >= 0 ? 'budget-positive' : 'budget-over'"
             >
-              {{ (budgetRemaining < 0 ? '-' : '') + formatAmount(Math.abs(budgetRemaining)) }}
+              {{
+                (budgetRemaining < 0 ? '-' : '') +
+                formatAmount(Math.abs(budgetRemaining))
+              }}
             </strong>
           </div>
         </div>
@@ -325,7 +323,7 @@ const getTransactionDescription = (transaction) =>
 
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -333,17 +331,19 @@ const getTransactionDescription = (transaction) =>
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 20px 24px;
+  padding: 24px 28px;
 }
 
-.budget-card {
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(34, 197, 94, 0.14),
-      transparent 30%
-    ),
-    var(--card-bg);
+.income-card {
+  border-left: 3px solid var(--income);
+}
+
+.expense-card {
+  border-left: 3px solid var(--expense);
+}
+
+.net-card {
+  border-left: 3px solid var(--accent);
 }
 
 .card-label {
@@ -353,9 +353,15 @@ const getTransactionDescription = (transaction) =>
 }
 
 .card-amount {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .income {
@@ -364,10 +370,6 @@ const getTransactionDescription = (transaction) =>
 
 .expense {
   color: var(--expense);
-}
-
-.balance {
-  color: var(--balance);
 }
 
 .panel {

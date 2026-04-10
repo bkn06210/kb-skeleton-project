@@ -4,57 +4,30 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">월 예산</h2>
-          <p class="section-subtitle">{{ monthStore.label }} 예산 목표</p>
+          <p class="section-subtitle">{{ monthStore.label }}에 사용할 예산을 설정해요</p>
         </div>
-        <button class="btn-save-inline" @click="saveBudget">예산 저장</button>
-      </div>
-
-      <div class="budget-summary">
-        <div class="summary-badge">
-          <span class="summary-label">총예산</span>
-          <strong>{{ formatAmount(totalBudgetValue) }}</strong>
-        </div>
-        <div class="summary-badge">
-          <span class="summary-label">카테고리 예산</span>
-          <strong>{{ activeCategoryBudgetCount }}</strong>
-        </div>
-        <div class="summary-badge" :class="{ warning: budgetGap < 0 }">
-          <span class="summary-label">남은 배분</span>
-          <strong>{{ budgetGapLabel }}</strong>
-        </div>
+        <button class="btn-save-inline" @click="saveBudget">저장</button>
       </div>
 
       <div class="budget-form">
         <div class="field">
           <label class="field-label">
-            월 총예산 <span class="badge required">필수</span>
+            이번 달 예산 <span class="badge required">필수</span>
           </label>
-          <input
-            class="form-input"
-            type="text"
-            inputmode="numeric"
-            :value="totalBudgetDisplay"
-            @input="onTotalBudgetInput"
-            placeholder="0"
-          />
-        </div>
-
-        <div class="budget-grid">
-          <div
-            v-for="category in expenseCategories"
-            :key="category.id"
-            class="budget-item"
-          >
-            <label class="field-label">{{ category.name }}</label>
+          <div class="amount-input-wrap">
             <input
-              class="form-input"
+              class="form-input amount-input"
               type="text"
               inputmode="numeric"
-              :value="categoryBudgetDisplays[category.name] ?? ''"
-              @input="onCategoryBudgetInput(category.name, $event)"
+              :value="totalBudgetDisplay"
+              @input="onTotalBudgetInput"
               placeholder="0"
             />
+            <span class="amount-unit">원</span>
           </div>
+          <p v-if="totalBudgetValue" class="budget-hint">
+            하루 평균 {{ formatAmount(Math.floor(totalBudgetValue / 30)) }}원
+          </p>
         </div>
       </div>
     </div>
@@ -191,7 +164,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useProfileStore } from '../stores/profileStore';
 import { useCategoryStore } from '../stores/categoryStore';
@@ -220,41 +193,14 @@ const newItem = ref({
 
 const totalBudgetValue = ref(0);
 const totalBudgetDisplay = ref('');
-const categoryBudgetValues = ref({});
-const categoryBudgetDisplays = ref({});
 
 const formatAmount = (value) => Number(value || 0).toLocaleString();
-
-const applyFormattedInput = (rawValue, valuesRef, displaysRef, key) => {
-  const raw = rawValue.replace(/[^\d]/g, '');
-  const amount = raw ? Number(raw) : 0;
-  valuesRef.value = {
-    ...valuesRef.value,
-    [key]: amount,
-  };
-  displaysRef.value = {
-    ...displaysRef.value,
-    [key]: raw ? amount.toLocaleString() : '',
-  };
-};
 
 const syncBudgetForm = () => {
   totalBudgetValue.value = Number(currentBudget.value?.total) || 0;
   totalBudgetDisplay.value = totalBudgetValue.value
     ? totalBudgetValue.value.toLocaleString()
     : '';
-
-  const nextValues = {};
-  const nextDisplays = {};
-
-  expenseCategories.value.forEach((category) => {
-    const amount = Number(currentBudget.value?.categories?.[category.name]) || 0;
-    nextValues[category.name] = amount;
-    nextDisplays[category.name] = amount ? amount.toLocaleString() : '';
-  });
-
-  categoryBudgetValues.value = nextValues;
-  categoryBudgetDisplays.value = nextDisplays;
 };
 
 const loadBudget = async () => {
@@ -277,46 +223,16 @@ watch(
   },
 );
 
-const activeCategoryBudgetCount = computed(() => {
-  return Object.values(categoryBudgetValues.value).filter(
-    (amount) => Number(amount) > 0,
-  ).length;
-});
-
-const categoryBudgetTotal = computed(() => {
-  return Object.values(categoryBudgetValues.value).reduce(
-    (sum, amount) => sum + (Number(amount) || 0),
-    0,
-  );
-});
-
-const budgetGap = computed(() => totalBudgetValue.value - categoryBudgetTotal.value);
-
-const budgetGapLabel = computed(() => {
-  if (!budgetGap.value) return '0';
-  if (budgetGap.value > 0) return `${formatAmount(budgetGap.value)} 남음`;
-  return `${formatAmount(Math.abs(budgetGap.value))} 초과`;
-});
-
 const onTotalBudgetInput = (e) => {
   const raw = e.target.value.replace(/[^\d]/g, '');
   totalBudgetValue.value = raw ? Number(raw) : 0;
   totalBudgetDisplay.value = raw ? Number(raw).toLocaleString() : '';
 };
 
-const onCategoryBudgetInput = (categoryName, e) => {
-  applyFormattedInput(
-    e.target.value,
-    categoryBudgetValues,
-    categoryBudgetDisplays,
-    categoryName,
-  );
-};
-
 const saveBudget = async () => {
   await monthlyBudgetStore.saveMonthlyBudgetByMonth(monthStore.yyyyMM, {
     total: totalBudgetValue.value,
-    categories: categoryBudgetValues.value,
+    categories: {},
   });
   syncBudgetForm();
 };
@@ -436,16 +352,28 @@ const removeItem = async (id) => {
   gap: 14px;
 }
 
-.budget-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+.amount-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.budget-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.amount-input {
+  padding-right: 36px;
+}
+
+.amount-unit {
+  position: absolute;
+  right: 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.budget-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 .btn-add,

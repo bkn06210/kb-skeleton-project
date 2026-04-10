@@ -46,24 +46,6 @@
       "memo": "알바비"
     },
     {
-      "type": "expense",
-      "date": "2026-04-09",
-      "amount": 333,
-      "category": "유흥",
-      "detailCategory": "33",
-      "memo": "치킨조키",
-      "id": "pYekllTd_mU"
-    },
-    {
-      "type": "expense",
-      "date": "2026-04-09",
-      "amount": 444,
-      "category": "공과금",
-      "detailCategory": "",
-      "memo": "",
-      "id": "ydgpkLUL_p0"
-    },
-    {
       "type": "income",
       "date": "2026-04-09",
       "amount": 2222,
@@ -81,29 +63,213 @@
       "memo": "",
       "id": "3eRe0XG"
     },
-    { "id": "sample01", "type": "expense", "date": "2026-04-08", "amount": 12000, "category": "식비", "detailCategory": "점심", "memo": "김치찌개 백반" },
-    { "id": "sample02", "type": "expense", "date": "2026-04-08", "amount": 4500, "category": "교통비", "detailCategory": "지하철", "memo": "강남 왕복" },
-    { "id": "sample03", "type": "income", "date": "2026-04-08", "amount": 50000, "category": "부수입", "detailCategory": "중고거래", "memo": "에어팟 판매" },
-    { "id": "sample04", "type": "expense", "date": "2026-04-07", "amount": 32000, "category": "쇼핑", "detailCategory": "다이소", "memo": "생활용품" },
-    { "id": "sample05", "type": "expense", "date": "2026-04-07", "amount": 6500, "category": "식비", "detailCategory": "카페", "memo": "아이스 아메리카노" },
-    { "id": "sample06", "type": "expense", "date": "2026-04-06", "amount": 28000, "category": "유흥", "detailCategory": "영화", "memo": "친구랑 영화" },
-    { "id": "sample07", "type": "expense", "date": "2026-04-06", "amount": 9800, "category": "식비", "detailCategory": "편의점", "memo": "야식" },
-    { "id": "sample08", "type": "income", "date": "2026-04-05", "amount": 80000, "category": "부수입", "detailCategory": "과외", "memo": "수학 과외" },
-    { "id": "sample09", "type": "expense", "date": "2026-04-05", "amount": 15000, "category": "교통비", "detailCategory": "택시", "memo": "늦은 귀가" },
-    { "id": "sample10", "type": "expense", "date": "2026-04-05", "amount": 42000, "category": "식비", "detailCategory": "저녁", "memo": "삼겹살 회식" },
-    { "id": "sample11", "type": "expense", "date": "2026-04-04", "amount": 19900, "category": "공과금", "detailCategory": "유튜브 프리미엄", "memo": "월 구독" },
-    { "id": "sample12", "type": "expense", "date": "2026-04-04", "amount": 7000, "category": "식비", "detailCategory": "점심", "memo": "편의점 도시락" },
-    { "id": "sample13", "type": "expense", "date": "2026-04-03", "amount": 55000, "category": "쇼핑", "detailCategory": "옷", "memo": "반팔 티셔츠" },
-    { "id": "sample14", "type": "expense", "date": "2026-04-03", "amount": 3500, "category": "교통비", "detailCategory": "버스", "memo": "출근" },
-    { "id": "sample15", "type": "income", "date": "2026-04-03", "amount": 150000, "category": "용돈", "detailCategory": "", "memo": "할머니 용돈" },
-    { "id": "sample16", "type": "expense", "date": "2026-04-02", "amount": 23000, "category": "의료", "detailCategory": "약국", "memo": "감기약" },
-    { "id": "sample17", "type": "expense", "date": "2026-04-02", "amount": 11000, "category": "식비", "detailCategory": "배달", "memo": "치킨 배달" },
-    { "id": "sample18", "type": "expense", "date": "2026-04-02", "amount": 8000, "category": "식비", "detailCategory": "카페", "memo": "라떼 두 잔" },
-    { "id": "sample19", "type": "expense", "date": "2026-04-01", "amount": 120000, "category": "쇼핑", "detailCategory": "인터넷쇼핑", "memo": "운동화 구매" },
-    { "id": "sample20", "type": "expense", "date": "2026-04-01", "amount": 17000, "category": "유흥", "detailCategory": "넷플릭스", "memo": "월 구독" },
-    { "id": "sample21", "type": "expense", "date": "2026-04-01", "amount": 5500, "category": "식비", "detailCategory": "아침", "memo": "편의점 샌드위치" },
-    { "id": "sample22", "type": "income", "date": "2026-04-01", "amount": 2000000, "category": "월급", "detailCategory": "", "memo": "4월 월급" },
-    { "id": "sample23", "type": "expense", "date": "2026-04-01", "amount": 300000, "category": "기타", "detailCategory": "월세", "memo": "4월 월세" }
+    {
+      "id": "sample01",
+      "type": "expense",
+      "date": "2026-04-08",
+      "amount": 12000,
+      "category": "식비",
+      "detailCategory": "점심",
+      "memo": "김치찌개 백반"
+    },
+    {
+      "id": "sample02",
+      "type": "expense",
+      "date": "2026-04-08",
+      "amount": 4500,
+      "category": "교통비",
+      "detailCategory": "지하철",
+      "memo": "강남 왕복"
+    },
+    {
+      "id": "sample03",
+      "type": "income",
+      "date": "2026-04-08",
+      "amount": 50000,
+      "category": "부수입",
+      "detailCategory": "중고거래",
+      "memo": "에어팟 판매"
+    },
+    {
+      "id": "sample04",
+      "type": "expense",
+      "date": "2026-04-07",
+      "amount": 32000,
+      "category": "쇼핑",
+      "detailCategory": "다이소",
+      "memo": "생활용품"
+    },
+    {
+      "id": "sample05",
+      "type": "expense",
+      "date": "2026-04-07",
+      "amount": 6500,
+      "category": "식비",
+      "detailCategory": "카페",
+      "memo": "아이스 아메리카노"
+    },
+    {
+      "id": "sample06",
+      "type": "expense",
+      "date": "2026-04-06",
+      "amount": 28000,
+      "category": "유흥",
+      "detailCategory": "영화",
+      "memo": "친구랑 영화"
+    },
+    {
+      "id": "sample07",
+      "type": "expense",
+      "date": "2026-04-06",
+      "amount": 9800,
+      "category": "식비",
+      "detailCategory": "편의점",
+      "memo": "야식"
+    },
+    {
+      "id": "sample08",
+      "type": "income",
+      "date": "2026-04-05",
+      "amount": 80000,
+      "category": "부수입",
+      "detailCategory": "과외",
+      "memo": "수학 과외"
+    },
+    {
+      "id": "sample09",
+      "type": "expense",
+      "date": "2026-04-05",
+      "amount": 15000,
+      "category": "교통비",
+      "detailCategory": "택시",
+      "memo": "늦은 귀가"
+    },
+    {
+      "id": "sample10",
+      "type": "expense",
+      "date": "2026-04-05",
+      "amount": 42000,
+      "category": "식비",
+      "detailCategory": "저녁",
+      "memo": "삼겹살 회식"
+    },
+    {
+      "id": "sample11",
+      "type": "expense",
+      "date": "2026-04-04",
+      "amount": 19900,
+      "category": "공과금",
+      "detailCategory": "유튜브 프리미엄",
+      "memo": "월 구독"
+    },
+    {
+      "id": "sample12",
+      "type": "expense",
+      "date": "2026-04-04",
+      "amount": 7000,
+      "category": "식비",
+      "detailCategory": "점심",
+      "memo": "편의점 도시락"
+    },
+    {
+      "id": "sample13",
+      "type": "expense",
+      "date": "2026-04-03",
+      "amount": 55000,
+      "category": "쇼핑",
+      "detailCategory": "옷",
+      "memo": "반팔 티셔츠"
+    },
+    {
+      "id": "sample14",
+      "type": "expense",
+      "date": "2026-04-03",
+      "amount": 3500,
+      "category": "교통비",
+      "detailCategory": "버스",
+      "memo": "출근"
+    },
+    {
+      "id": "sample15",
+      "type": "income",
+      "date": "2026-04-03",
+      "amount": 150000,
+      "category": "용돈",
+      "detailCategory": "",
+      "memo": "할머니 용돈"
+    },
+    {
+      "id": "sample16",
+      "type": "expense",
+      "date": "2026-04-02",
+      "amount": 23000,
+      "category": "의료",
+      "detailCategory": "약국",
+      "memo": "감기약"
+    },
+    {
+      "id": "sample17",
+      "type": "expense",
+      "date": "2026-04-02",
+      "amount": 11000,
+      "category": "식비",
+      "detailCategory": "배달",
+      "memo": "치킨 배달"
+    },
+    {
+      "id": "sample18",
+      "type": "expense",
+      "date": "2026-04-02",
+      "amount": 8000,
+      "category": "식비",
+      "detailCategory": "카페",
+      "memo": "라떼 두 잔"
+    },
+    {
+      "id": "sample19",
+      "type": "expense",
+      "date": "2026-04-01",
+      "amount": 120000,
+      "category": "쇼핑",
+      "detailCategory": "인터넷쇼핑",
+      "memo": "운동화 구매"
+    },
+    {
+      "id": "sample20",
+      "type": "expense",
+      "date": "2026-04-01",
+      "amount": 17000,
+      "category": "유흥",
+      "detailCategory": "넷플릭스",
+      "memo": "월 구독"
+    },
+    {
+      "id": "sample21",
+      "type": "expense",
+      "date": "2026-04-01",
+      "amount": 5500,
+      "category": "식비",
+      "detailCategory": "아침",
+      "memo": "편의점 샌드위치"
+    },
+    {
+      "id": "sample22",
+      "type": "income",
+      "date": "2026-04-01",
+      "amount": 2000000,
+      "category": "월급",
+      "detailCategory": "",
+      "memo": "4월 월급"
+    },
+    {
+      "id": "sample23",
+      "type": "expense",
+      "date": "2026-04-01",
+      "amount": 300000,
+      "category": "기타",
+      "detailCategory": "월세",
+      "memo": "4월 월세"
+    }
   ],
   "incomeCategory": [
     {
@@ -233,11 +399,8 @@
     {
       "id": "ea22lwuBCAQ",
       "month": "2026-04",
-      "total": 200000,
-      "categories": {
-        "식비": 3000,
-        "교통비": 30000
-      }
+      "total": 3000000,
+      "categories": {}
     },
     {
       "id": "N9lwSjLGXKU",

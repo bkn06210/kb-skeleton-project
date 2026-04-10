@@ -135,7 +135,7 @@
       >
         <div class="item-left">
           <div class="item-icon" :class="item.type">
-            {{ item.type === 'income' ? '↓' : '↑' }}
+            {{ item.type === 'income' ? '↑' : '↓' }}
           </div>
           <div class="item-details">
             <div class="item-title">

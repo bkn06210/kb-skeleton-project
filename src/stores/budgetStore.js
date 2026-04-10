@@ -40,6 +40,7 @@ export const useBudgetStore = defineStore('budget', () => {
   const create = async (data) => {
     await addBudget(data);
     await fetchTransactions();
+    toastStore.show('거래 내역이 추가되었습니다.');
   };
 
   const update = async (id, data) => {

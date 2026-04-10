@@ -45,6 +45,7 @@ export const useBudgetStore = defineStore('budget', () => {
   const update = async (id, data) => {
     await updateBudget(id, data);
     await fetchTransactions();
+    toastStore.show('거래 내역이 수정되었습니다.');
   };
 
   const deleteTransaction = async (id) => {

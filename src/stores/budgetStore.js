@@ -8,9 +8,11 @@ import {
   deleteBudget,
 } from '../api/budget';
 import { useMonthStore } from './monthStore';
+import { useToastStore } from './toastStore';
 
 export const useBudgetStore = defineStore('budget', () => {
   const monthStore = useMonthStore();
+  const toastStore = useToastStore();
   const transactions = ref([]);
   const selectedPeriod = ref('month');
   const selectedType = ref('all');
@@ -49,7 +51,7 @@ export const useBudgetStore = defineStore('budget', () => {
     try {
       await deleteBudget(id);
       transactions.value = transactions.value.filter((item) => item.id !== id);
-      alert('삭제되었습니다.');
+      toastStore.show('거래 내역이 삭제되었습니다.');
     } catch (error) {
       console.error('삭제 실패:', error);
     }

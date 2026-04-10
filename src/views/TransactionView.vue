@@ -12,33 +12,18 @@
           <button
             class="toggle-btn"
             :class="{ active: selectedType === 'all' }"
-            @click="handleTypeClick('all')"
-          >
-            <span>전체</span>
-            <span v-if="selectedType === 'all'" class="sort-arrow">
-              {{ sortArrow }}
-            </span>
-          </button>
+            @click="selectedType = 'all'"
+          >전체</button>
           <button
             class="toggle-btn"
             :class="{ active: selectedType === 'income' }"
-            @click="handleTypeClick('income')"
-          >
-            <span>수입</span>
-            <span v-if="selectedType === 'income'" class="sort-arrow">
-              {{ sortArrow }}
-            </span>
-          </button>
+            @click="selectedType = 'income'"
+          >수입</button>
           <button
             class="toggle-btn"
             :class="{ active: selectedType === 'expense' }"
-            @click="handleTypeClick('expense')"
-          >
-            <span>지출</span>
-            <span v-if="selectedType === 'expense'" class="sort-arrow">
-              {{ sortArrow }}
-            </span>
-          </button>
+            @click="selectedType = 'expense'"
+          >지출</button>
         </div>
       </div>
 
@@ -125,9 +110,26 @@
       @cancel="editModalVisible = false"
     />
 
+    <ConfirmModal
+      :show="confirmModalVisible"
+      message="정말 이 거래 내역을 삭제하시겠습니까?"
+      @confirm="onConfirmDelete"
+      @cancel="confirmModalVisible = false"
+    />
+
+    <div class="list-header">
+      <span class="list-count">총 {{ sortedTransactions.length }}건</span>
+      <select class="sort-select" v-model="sortKey">
+        <option value="date-desc">날짜 최신순</option>
+        <option value="date-asc">날짜 오래된순</option>
+        <option value="amount-desc">금액 큰순</option>
+        <option value="amount-asc">금액 작은순</option>
+      </select>
+    </div>
+
     <div class="transaction-list">
       <div
-        v-for="item in sortedTransactions"
+        v-for="item in pagedTransactions"
         :key="item.id"
         class="transaction-item"
       >
@@ -200,20 +202,30 @@
       <div v-if="sortedTransactions.length === 0" class="empty-state">
         해당하는 거래 내역이 없습니다.
       </div>
+
+      <div v-if="hasMore" class="load-more">
+        <button class="load-more-btn" @click="loadMore">
+          더 보기 ({{ remaining }}건 남음)
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBudgetStore } from '../stores/budgetStore';
 import EditTransactionModal from '../components/EditTransactionModal.vue';
+import ConfirmModal from '../components/ConfirmModal.vue';
 
 const budgetStore = useBudgetStore();
 const editModalVisible = ref(false);
 const editingId = ref('');
-const sortOrder = ref('desc');
+const confirmModalVisible = ref(false);
+const deletingId = ref('');
+const sortKey = ref('date-desc');
+const pageSize = ref(20);
 
 const {
   filteredTransactions,
@@ -224,8 +236,6 @@ const {
   customStartDate,
   customEndDate,
 } = storeToRefs(budgetStore);
-
-const sortArrow = computed(() => (sortOrder.value === 'desc' ? '↓' : '↑'));
 
 const totalIncome = computed(() =>
   filteredTransactions.value
@@ -241,33 +251,33 @@ const totalExpense = computed(() =>
 
 const sortedTransactions = computed(() => {
   return [...filteredTransactions.value].sort((a, b) => {
-    const amountDiff = Number(b.amount || 0) - Number(a.amount || 0);
-
-    if (amountDiff !== 0) {
-      return sortOrder.value === 'desc' ? amountDiff : -amountDiff;
+    if (sortKey.value === 'date-desc') {
+      return String(b.date ?? '').localeCompare(String(a.date ?? ''));
+    } else if (sortKey.value === 'date-asc') {
+      return String(a.date ?? '').localeCompare(String(b.date ?? ''));
+    } else if (sortKey.value === 'amount-desc') {
+      return Number(b.amount || 0) - Number(a.amount || 0);
+    } else {
+      return Number(a.amount || 0) - Number(b.amount || 0);
     }
-
-    return String(b.date ?? '').localeCompare(String(a.date ?? ''));
   });
+});
+
+const pagedTransactions = computed(() => sortedTransactions.value.slice(0, pageSize.value));
+const hasMore = computed(() => pageSize.value < sortedTransactions.value.length);
+const remaining = computed(() => sortedTransactions.value.length - pageSize.value);
+
+const loadMore = () => {
+  pageSize.value += 20;
+};
+
+watch([sortKey, () => filteredTransactions.value], () => {
+  pageSize.value = 20;
 });
 
 const formatAmount = (amount) => Number(amount || 0).toLocaleString();
 const formatDate = (date) => (date ? date.replaceAll('-', '.') : '');
 const getMemoText = (item) => item.memo || item.detailCategory || '메모 없음';
-
-const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'desc' ? 'asc' : 'desc';
-};
-
-const handleTypeClick = (value) => {
-  if (selectedType.value === value) {
-    toggleSortOrder();
-    return;
-  }
-
-  selectedType.value = value;
-  sortOrder.value = 'desc';
-};
 
 const handlePeriodClick = (value) => {
   selectedPeriod.value = value;
@@ -283,7 +293,7 @@ const handleResetFilters = () => {
   selectedCategory.value = 'all';
   customStartDate.value = '';
   customEndDate.value = '';
-  sortOrder.value = 'desc';
+  sortKey.value = 'date-desc';
 };
 
 onMounted(() => {
@@ -300,10 +310,15 @@ const onEditSaved = async () => {
   await budgetStore.fetchTransactions();
 };
 
-const handleDelete = async (id) => {
-  if (confirm('정말 이 거래 내역을 삭제하시겠습니까?')) {
-    await budgetStore.deleteTransaction(id);
-  }
+const handleDelete = (id) => {
+  deletingId.value = id;
+  confirmModalVisible.value = true;
+};
+
+const onConfirmDelete = async () => {
+  confirmModalVisible.value = false;
+  await budgetStore.deleteTransaction(deletingId.value);
+  deletingId.value = '';
 };
 </script>
 
@@ -503,6 +518,34 @@ const handleDelete = async (id) => {
   cursor: pointer;
 }
 
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list-count {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.sort-select {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--sans);
+  padding: 6px 10px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.sort-select:focus {
+  border-color: var(--accent);
+}
+
 .transaction-list {
   display: flex;
   flex-direction: column;
@@ -650,6 +693,28 @@ const handleDelete = async (id) => {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.load-more-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.load-more-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+  color: var(--text-bright);
 }
 
 @media (max-width: 860px) {

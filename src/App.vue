@@ -6,6 +6,7 @@
       <main class="content">
         <RouterView />
       </main>
+      <ToastNotification />
       <button class="fab" @click="$router.push('/add')" title="Add transaction">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="12" y1="5" x2="12" y2="19" />
@@ -20,6 +21,7 @@
 import { RouterView } from 'vue-router';
 import SideBar from './components/SideBar.vue';
 import TopBar from './components/TopBar.vue';
+import ToastNotification from './components/ToastNotification.vue';
 </script>
 
 <style scoped>

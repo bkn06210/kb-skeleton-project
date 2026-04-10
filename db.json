@@ -224,8 +224,8 @@
     }
   ],
   "profile": {
-    "name": "홍길동",
-    "email": "hong@example.com"
+    "name": "김철수",
+    "email": "ㅏㅑㅡ@example.com"
   },
   "$schema": "./node_modules/json-server/schema.json"
 }

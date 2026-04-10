@@ -32,11 +32,12 @@
         <div class="budget-copy">
           <div class="budget-heading">
             <strong>{{ monthStore.label }} 예산</strong>
-            <span class="budget-rate">{{ Math.round(budgetUsageRate) }}%</span>
+            <span class="budget-rate" :class="budgetRateClass">{{ Math.round(budgetUsageRate) }}%</span>
           </div>
           <div class="budget-progress">
             <div
               class="budget-progress-value"
+              :class="budgetRateClass"
               :style="{ width: `${budgetUsageRate}%` }"
             />
           </div>
@@ -89,7 +90,7 @@
         <div class="panel-header">
           <div class="panel-title-group">
             <span class="panel-title">최근 거래 내역</span>
-            <span class="panel-caption">최근 5일</span>
+            <span class="panel-caption">최근 5건</span>
           </div>
           <RouterLink to="/transactions" class="view-all">전체 보기</RouterLink>
         </div>
@@ -192,27 +193,31 @@ import { useMonthStore } from '../stores/monthStore';
 import { useMonthlyBudgetStore } from '../stores/monthlyBudgetStore';
 import { useProfileStore } from '../stores/profileStore';
 
-const COLORS = [
-  '#ef4444',
-  '#3b82f6',
-  '#f59e0b',
-  '#22c55e',
-  '#a855f7',
-  '#ec4899',
-  '#06b6d4',
-  '#84cc16',
-  '#f97316',
-  '#14b8a6',
-  '#f43f5e',
-  '#8b5cf6',
+const CATEGORY_COLORS = {
+  식비: '#ef4444',    // 빨강
+  교통비: '#3b82f6',  // 파랑
+  쇼핑: '#ec4899',   // 핑크
+  의료: '#22c55e',   // 초록
+  유흥: '#f97316',   // 주황
+  공과금: '#06b6d4', // 하늘
+  기타: '#a855f7',   // 보라
+  월급: '#facc15',   // 노랑
+  용돈: '#84cc16',   // 라임
+  이자: '#14b8a6',   // 청록
+  부수입: '#8b5cf6', // 인디고
+};
+
+const FALLBACK_COLORS = [
+  '#f43f5e', '#0ea5e9', '#d97706', '#16a34a', '#7c3aed', '#db2777',
 ];
 
 const getCategoryColor = (name) => {
-  let hash = 0;
+  if (CATEGORY_COLORS[name]) return CATEGORY_COLORS[name];
+  let hash = 5381;
   for (let i = 0; i < name.length; i++) {
-    hash = (hash * 31 + (name.codePointAt(i) ?? 0)) & 0xffff;
+    hash = ((hash << 5) + hash + (name.codePointAt(i) ?? 0)) & 0x7fffffff;
   }
-  return COLORS[hash % COLORS.length];
+  return FALLBACK_COLORS[hash % FALLBACK_COLORS.length];
 };
 
 const budgetStore = useBudgetStore();
@@ -266,42 +271,10 @@ const budgetUsageRate = computed(() => {
   return Math.min(100, (totalExpense.value / totalBudget.value) * 100);
 });
 
-const padNumber = (value) => String(value).padStart(2, '0');
-const formatDateKey = (date) => {
-  const year = date.getFullYear();
-  const month = padNumber(date.getMonth() + 1);
-  const day = padNumber(date.getDate());
-  return `${year}-${month}-${day}`;
-};
-
-const recentTransactionEndKey = computed(() => {
-  const today = new Date();
-  const currentMonthKey = `${today.getFullYear()}-${padNumber(today.getMonth() + 1)}`;
-
-  if (monthStore.yyyyMM === currentMonthKey) {
-    return formatDateKey(today);
-  }
-
-  const lastDateOfMonth = new Date(monthStore.year, monthStore.month, 0);
-  return formatDateKey(lastDateOfMonth);
-});
-
-const recentTransactionStartKey = computed(() => {
-  const endDate = new Date(`${recentTransactionEndKey.value}T00:00:00`);
-  endDate.setDate(endDate.getDate() - 4);
-  return formatDateKey(endDate);
-});
-
 const recentTransactions = computed(() =>
   [...monthTransactions.value]
-    .filter((transaction) => {
-      const dateKey = String(transaction.date ?? '');
-      return (
-        dateKey >= recentTransactionStartKey.value &&
-        dateKey <= recentTransactionEndKey.value
-      );
-    })
-    .sort((a, b) => String(b.date).localeCompare(String(a.date))),
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .slice(0, 5),
 );
 
 const expenseByCategory = computed(() => {
@@ -330,6 +303,12 @@ const expenseByCategory = computed(() => {
 });
 
 const hasBudget = computed(() => totalBudget.value > 0);
+
+const budgetRateClass = computed(() => {
+  if (budgetUsageRate.value >= 100) return 'rate-over';
+  if (budgetUsageRate.value >= 80) return 'rate-warn';
+  return 'rate-safe';
+});
 
 const formatAmount = (value) => Number(value || 0).toLocaleString();
 const formatDate = (date) => date?.slice(5).replace('-', '.') ?? '';
@@ -486,6 +465,33 @@ const getTransactionDescription = (transaction) =>
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, #3b82f6, #22c55e);
+  transition: width 0.4s ease, background 0.3s;
+}
+
+.budget-progress-value.rate-warn {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+.budget-progress-value.rate-over {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.budget-rate.rate-safe {
+  color: #93c5fd;
+}
+
+.budget-rate.rate-warn {
+  color: #fbbf24;
+}
+
+.budget-rate.rate-over {
+  color: #f87171;
+  animation: pulse-rate 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-rate {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
 }
 
 .budget-caption {

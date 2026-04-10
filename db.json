@@ -273,11 +273,20 @@
     {
       "type": "expense",
       "date": "2026-04-10",
-      "amount": 11111111,
+      "amount": 2555555,
+      "category": "유흥",
+      "detailCategory": "",
+      "memo": "",
+      "id": "7sy98jb"
+    },
+    {
+      "type": "expense",
+      "date": "2026-04-10",
+      "amount": 1111111,
       "category": "의료",
       "detailCategory": "",
       "memo": "",
-      "id": "0isjJ7v"
+      "id": "w4YV55a"
     }
   ],
   "incomeCategory": [
@@ -329,15 +338,6 @@
     }
   ],
   "periodicExpense": [
-    {
-      "id": "0001",
-      "category": "공과금",
-      "detailCategory": "통신비",
-      "amount": 50000,
-      "memo": "월 통신비",
-      "cycle": "monthly",
-      "day": 1
-    },
     {
       "id": "0002",
       "category": "유흥",

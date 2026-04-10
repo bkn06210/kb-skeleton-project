@@ -9,10 +9,25 @@
         <button class="btn-save-inline" @click="saveBudget">저장</button>
       </div>
 
+      <div class="budget-summary-badges">
+        <div class="summary-badge">
+          <span class="summary-label">총예산</span>
+          <strong>{{ formatAmount(totalBudgetValue) }}</strong>
+        </div>
+        <div class="summary-badge">
+          <span class="summary-label">카테고리 예산</span>
+          <strong>{{ allocatedCategoryCount }}</strong>
+        </div>
+        <div class="summary-badge" :class="{ warning: remainingBudget < 0 }">
+          <span class="summary-label">남은 배분</span>
+          <strong>{{ remainingBudget >= 0 ? formatAmount(remainingBudget) + ' 남음' : formatAmount(Math.abs(remainingBudget)) + ' 초과' }}</strong>
+        </div>
+      </div>
+
       <div class="budget-form">
         <div class="field">
           <label class="field-label">
-            이번 달 예산 <span class="badge required">필수</span>
+            월 총예산 <span class="badge required">필수</span>
           </label>
           <div class="amount-input-wrap">
             <input
@@ -25,9 +40,20 @@
             />
             <span class="amount-unit">원</span>
           </div>
-          <p v-if="totalBudgetValue" class="budget-hint">
-            하루 평균 {{ formatAmount(Math.floor(totalBudgetValue / 30)) }}원
-          </p>
+        </div>
+
+        <div class="category-budget-grid">
+          <div v-for="cat in EXPENSE_CATEGORIES" :key="cat" class="field">
+            <label class="field-label">{{ cat }}</label>
+            <input
+              class="form-input"
+              type="text"
+              inputmode="numeric"
+              :value="categoryBudgetDisplay[cat]"
+              @input="onCategoryBudgetInput(cat, $event)"
+              placeholder="0"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -164,13 +190,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useProfileStore } from '../stores/profileStore';
 import { useCategoryStore } from '../stores/categoryStore';
 import { useMonthlyBudgetStore } from '../stores/monthlyBudgetStore';
 import { useMonthStore } from '../stores/monthStore';
 import CategorySelect from '../components/CategorySelect.vue';
+
+const EXPENSE_CATEGORIES = ['식비', '교통비', '유흥', '공과금', '쇼핑', '의료', '기타'];
 
 const profileStore = useProfileStore();
 const categoryStore = useCategoryStore();
@@ -193,14 +221,32 @@ const newItem = ref({
 
 const totalBudgetValue = ref(0);
 const totalBudgetDisplay = ref('');
+const categoryBudgetValues = ref({});
+const categoryBudgetDisplay = ref({});
 
 const formatAmount = (value) => Number(value || 0).toLocaleString();
+
+const allocatedCategoryCount = computed(() =>
+  EXPENSE_CATEGORIES.filter((cat) => (categoryBudgetValues.value[cat] || 0) > 0).length,
+);
+
+const allocatedTotal = computed(() =>
+  EXPENSE_CATEGORIES.reduce((sum, cat) => sum + (categoryBudgetValues.value[cat] || 0), 0),
+);
+
+const remainingBudget = computed(() => totalBudgetValue.value - allocatedTotal.value);
 
 const syncBudgetForm = () => {
   totalBudgetValue.value = Number(currentBudget.value?.total) || 0;
   totalBudgetDisplay.value = totalBudgetValue.value
     ? totalBudgetValue.value.toLocaleString()
     : '';
+  const cats = currentBudget.value?.categories || {};
+  EXPENSE_CATEGORIES.forEach((cat) => {
+    const v = Number(cats[cat]) || 0;
+    categoryBudgetValues.value[cat] = v;
+    categoryBudgetDisplay.value[cat] = v ? v.toLocaleString() : '';
+  });
 };
 
 const loadBudget = async () => {
@@ -229,10 +275,16 @@ const onTotalBudgetInput = (e) => {
   totalBudgetDisplay.value = raw ? Number(raw).toLocaleString() : '';
 };
 
+const onCategoryBudgetInput = (cat, e) => {
+  const raw = e.target.value.replace(/[^\d]/g, '');
+  categoryBudgetValues.value[cat] = raw ? Number(raw) : 0;
+  categoryBudgetDisplay.value[cat] = raw ? Number(raw).toLocaleString() : '';
+};
+
 const saveBudget = async () => {
   await monthlyBudgetStore.saveMonthlyBudgetByMonth(monthStore.yyyyMM, {
     total: totalBudgetValue.value,
-    categories: {},
+    categories: { ...categoryBudgetValues.value },
   });
   syncBudgetForm();
 };
@@ -313,7 +365,7 @@ const removeItem = async (id) => {
   color: var(--text-muted);
 }
 
-.budget-summary {
+.budget-summary-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -334,6 +386,12 @@ const removeItem = async (id) => {
 .summary-badge.warning {
   border-color: rgba(248, 113, 113, 0.32);
   color: #fecaca;
+}
+
+.category-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
 .summary-label {

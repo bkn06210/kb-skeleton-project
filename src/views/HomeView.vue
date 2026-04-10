@@ -152,24 +152,24 @@
         </div>
         <div class="category-bar" v-if="expenseByCategory.length > 0">
           <div
-            v-for="(cat, i) in expenseByCategory"
+            v-for="cat in expenseByCategory"
             :key="cat.name"
             class="bar-segment"
             :style="{
               width: cat.ratio + '%',
-              background: COLORS[i % COLORS.length],
+              background: getCategoryColor(cat.name),
             }"
           />
         </div>
         <div class="category-legend">
           <div
-            v-for="(cat, i) in expenseByCategory"
+            v-for="cat in expenseByCategory"
             :key="cat.name"
             class="legend-item"
           >
             <span
               class="legend-dot"
-              :style="{ background: COLORS[i % COLORS.length] }"
+              :style="{ background: getCategoryColor(cat.name) }"
             />
             <span class="legend-name">{{ cat.name }}</span>
             <span class="legend-amount">{{ formatAmount(cat.total) }}</span>
@@ -199,7 +199,21 @@ const COLORS = [
   '#22c55e',
   '#a855f7',
   '#ec4899',
+  '#06b6d4',
+  '#84cc16',
+  '#f97316',
+  '#14b8a6',
+  '#f43f5e',
+  '#8b5cf6',
 ];
+
+const getCategoryColor = (name) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + (name.codePointAt(i) ?? 0)) & 0xffff;
+  }
+  return COLORS[hash % COLORS.length];
+};
 
 const budgetStore = useBudgetStore();
 const monthStore = useMonthStore();
